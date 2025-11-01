@@ -1,6 +1,6 @@
 # Tiến độ tuần 1 (27/10 – 02/11)
 ## 1. Việc đã hoàn thành
-- Tạo GitHub Repository đúng quy định.
+- Tạo GitHub Repository 
 - Mời giảng viên TS. Đoàn Phước Miền làm Collaborator.
 - Cấu hình README.md 
 
