@@ -49,11 +49,11 @@
                 <h2>Danh mục sản phẩm</h2>
             </div>
             <div class="category-grid">
-                <a href="#" class="category-card">
+                <a asp-controller="Products" asp-action="Category" asp-route-id="1" class="category-card">
                     <div class="category-icon"> <img src="~/imgs/icons/IP_Desk_25.png" alt="iPhone" /></div>
                     <h3>iPhone</h3>
                 </a>
-                <a href="#" class="category-card">
+                <a asp-controller="Products" asp-action="Category" asp-route-id="3" class="category-card">
                     <div class="category-icon"> <img src="~/imgs/icons/Mac_Desk_25.png" alt="iPhone" /></div>
                     <h3>Mac</h3>
                 </a>
@@ -65,7 +65,7 @@
                     <div class="category-icon"> <img src="~/imgs/icons/Speaker_Desk_25.png" alt="iPhone" /></div>
                     <h3>AirPods</h3>
                 </a>
-                <a href="#" class="category-card">
+                <a asp-controller="Products" asp-action="Category" asp-route-id="2" class="category-card">
                     <div class="category-icon"> <img src="~/imgs/icons/Ipad_Desk_25.png" alt="iPhone" /></div>
                     <h3>iPad</h3>
                 </a>
@@ -118,7 +118,7 @@
         <!-- Mac Section -->
         <div class="section-title">
             <h2><i class="bi bi-laptop"></i> MacBook</h2>
-            <a asp-controller="Products" asp-action="Category" asp-route-id="2" class="view-all">Xem tất cả →</a>
+            <a asp-controller="Products" asp-action="Category" asp-route-id="3" class="view-all">Xem tất cả →</a>
         </div>
 
         <div class="product-grid">
@@ -151,7 +151,7 @@
         <!-- iPad Section -->
         <div class="section-title">
             <h2><i class="bi bi-tablet"></i> iPad</h2>
-            <a asp-controller="Products" asp-action="Category" asp-route-id="3" class="view-all">Xem tất cả →</a>
+            <a asp-controller="Products" asp-action="Category" asp-route-id="2" class="view-all">Xem tất cả →</a>
         </div>
 
         <div class="product-grid">
