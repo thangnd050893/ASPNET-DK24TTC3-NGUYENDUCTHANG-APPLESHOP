@@ -1,38 +1,47 @@
 ﻿@{
     ViewData["Title"] = "Trang Chủ";
 }
-
+@model AppleShop.Models.ViewModels.HomeIndexVM
+@using System.Globalization
 <body>
     <!-- Main Container -->
     <div class="container">
         <!-- Hero Banner Slider -->
+        <!-- Hero Banner Slider -->
         <div class="hero-slider">
             <div class="slider-wrapper" id="slider">
+                <!-- Slide 1 -->
                 <div class="slide">
                     <img src="~/imgs/hero/sider2.jpg" alt="sider2" style="width:100%; border-radius:20px;" />
-                   
                 </div>
-                <div class="slide" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                    <div class="slide-content">
-                        <h2>MacBook Air M3</h2>
-                        <p>Siêu mỏng. Siêu khỏe. Siêu đỉnh.</p>
-                        <a href="#" class="btn-shop">Khám phá</a>
-                    </div>
+
+                <!-- Slide 2 -->
+                <div class="slide">
+                    <img src="~/imgs/hero/sider1.jpg" alt="sider1" style="width:100%; border-radius:20px;" />
                 </div>
-                <div class="slide" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                    <div class="slide-content">
-                        <h2>Apple Watch Series 9</h2>
-                        <p>Khỏe hơn. Sáng hơn. Mạnh mẽ hơn.</p>
-                        <a href="#" class="btn-shop">Xem thêm</a>
-                    </div>
+
+                <!-- Slide 3 -->
+                <div class="slide">
+                    <img src="~/imgs/hero/sider3.jpg" alt="sider3" style="width:100%; border-radius:20px;" />
                 </div>
             </div>
+
+            <!-- Nút điều hướng trái/phải -->
+            <button class="slider-btn prev" onclick="prevSlide()">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="slider-btn next" onclick="nextSlide()">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+
+            <!-- Dấu chấm chỉ slide -->
             <div class="slider-dots">
                 <span class="dot active" onclick="currentSlide(0)"></span>
                 <span class="dot" onclick="currentSlide(1)"></span>
                 <span class="dot" onclick="currentSlide(2)"></span>
             </div>
         </div>
+
 
         <!-- Category Section -->
         <div class="category-section">
@@ -66,320 +75,113 @@
                 </a>
             </div>
         </div>
+<!-- Hot Products Section -->
+<div class="section-title">
+    <h2><i class="bi bi-apple"></i> iPhone</h2>
+    <a asp-controller="Products" asp-action="Category" asp-route-id="1" class="view-all">Xem tất cả →</a>
+</div>
 
-        <!-- Hot Products Section -->
-        <div class="section-title">
-            <h2><i class="bi bi-apple"></i> iPhone</h2>
-            <a href="#" class="view-all">Xem tất cả →</a>
+<div class="product-grid">
+@foreach (var p in Model.Iphones)
+{
+    <a asp-controller="Products" asp-action="Detail" asp-route-id="@p.Id" class="product-card">
+        <span class="product-badge">HOT</span>
+
+        <img src="@Url.Content(string.IsNullOrWhiteSpace(p.HinhAnh) ? "~/imgs/no-image.png" : p.HinhAnh)"
+             alt="@p.Ten" class="product-image" />
+
+        <h3 class="product-name">@p.Ten</h3>
+
+        <div class="product-price">
+            <span class="current-price">
+                @string.Format(new CultureInfo("vi-VN"), "{0:N0}₫", p.GiaBan)
+            </span>
         </div>
-        <div class="product-grid">
-            <a href="#" class="product-card">
-                <span class="product-badge">HOT</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=iPhone+15+Pro+Max" alt="iPhone 15 Pro Max" class="product-image">
-                <h3 class="product-name">iPhone 15 Pro Max 256GB</h3>
-                <div class="product-price">
-                    <span class="current-price">29.990.000₫</span>
-                    <span class="old-price">34.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 2.499.167₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">A17 Pro</span>
-                    <span class="feature-tag">Titanium</span>
-                </div>
-            </a>
 
-            <a href="#" class="product-card">
-                <span class="product-badge new">NEW</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=iPhone+15" alt="iPhone 15" class="product-image">
-                <h3 class="product-name">iPhone 15 128GB</h3>
-                <div class="product-price">
-                    <span class="current-price">22.990.000₫</span>
-                    <span class="old-price">25.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 1.915.833₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">A16 Bionic</span>
-                    <span class="feature-tag">Dynamic Island</span>
-                </div>
-            </a>
+        
 
-            <a href="#" class="product-card">
-                <span class="product-badge">HOT</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=MacBook+Air+M3" alt="MacBook Air M3" class="product-image">
-                <h3 class="product-name">MacBook Air 13" M3 8GB 256GB</h3>
-                <div class="product-price">
-                    <span class="current-price">27.990.000₫</span>
-                    <span class="old-price">31.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 2.332.500₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">M3 chip</span>
-                    <span class="feature-tag">8GB RAM</span>
-                </div>
-            </a>
-
-            <a href="#" class="product-card">
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=Apple+Watch+S9" alt="Apple Watch S9" class="product-image">
-                <h3 class="product-name">Apple Watch Series 9 41mm</h3>
-                <div class="product-price">
-                    <span class="current-price">9.990.000₫</span>
-                    <span class="old-price">11.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 832.500₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">GPS</span>
-                    <span class="feature-tag">Always-On</span>
-                </div>
-            </a>
-
-            <a href="#" class="product-card">
-                <span class="product-badge new">NEW</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=AirPods+Pro+2" alt="AirPods Pro 2" class="product-image">
-                <h3 class="product-name">AirPods Pro 2 USB-C</h3>
-                <div class="product-price">
-                    <span class="current-price">5.990.000₫</span>
-                    <span class="old-price">6.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 499.167₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">ANC</span>
-                    <span class="feature-tag">USB-C</span>
-                </div>
-            </a>
-
-            <a href="#" class="product-card">
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=iPad+Pro+M2" alt="iPad Pro M2" class="product-image">
-                <h3 class="product-name">iPad Pro 11" M2 128GB WiFi</h3>
-                <div class="product-price">
-                    <span class="current-price">19.990.000₫</span>
-                    <span class="old-price">23.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 1.665.833₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">M2 chip</span>
-                    <span class="feature-tag">11 inch</span>
-                </div>
-            </a>
-
-            <a href="#" class="product-card">
-                <span class="product-badge">HOT</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=iPhone+14+Pro" alt="iPhone 14 Pro" class="product-image">
-                <h3 class="product-name">iPhone 14 Pro 128GB</h3>
-                <div class="product-price">
-                    <span class="current-price">24.990.000₫</span>
-                    <span class="old-price">29.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 2.082.500₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">A16 Bionic</span>
-                    <span class="feature-tag">48MP</span>
-                </div>
-            </a>
-
-            <a href="#" class="product-card">
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=MacBook+Pro+M3" alt="MacBook Pro M3" class="product-image">
-                <h3 class="product-name">MacBook Pro 14" M3 8GB 512GB</h3>
-                <div class="product-price">
-                    <span class="current-price">39.990.000₫</span>
-                    <span class="old-price">44.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 3.332.500₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">M3 Pro</span>
-                    <span class="feature-tag">512GB</span>
-                </div>
-            </a>
+        <div class="product-features">
+            <span class="feature-tag">New</span>
         </div>
+    </a>
+}
+</div>
 
         <!-- Promotion Banner -->
         <div class="promo-banner">
-            <h2>🎉 Ưu đãi độc quyền - Giảm đến 30%</h2>
+            <h2>Ưu đãi độc quyền - Giảm đến 10%</h2>
             <p>Áp dụng cho tất cả sản phẩm Apple chính hãng</p>
             <a href="#" class="btn-shop">Xem ưu đãi</a>
         </div>
 
         <!-- New Products Section -->
+        <!-- Mac Section -->
         <div class="section-title">
-            <h2><i class="bi bi-apple"></i> Mac</h2>
-            <a href="#" class="view-all">Xem tất cả →</a>
+            <h2><i class="bi bi-laptop"></i> MacBook</h2>
+            <a asp-controller="Products" asp-action="Category" asp-route-id="2" class="view-all">Xem tất cả →</a>
         </div>
+
         <div class="product-grid">
-            <a href="#" class="product-card">
-                <span class="product-badge new">NEW</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=iPhone+15+Plus" alt="iPhone 15 Plus" class="product-image">
-                <h3 class="product-name">iPhone 15 Plus 128GB</h3>
-                <div class="product-price">
-                    <span class="current-price">24.990.000₫</span>
-                    <span class="old-price">27.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 2.082.500₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">6.7"</span>
-                    <span class="feature-tag">48MP</span>
-                </div>
-            </a>
+            @foreach (var p in Model.Macbooks)
+            {
+                <a asp-controller="Products" asp-action="Detail" asp-route-id="@p.Id" class="product-card">
+                    <span class="product-badge">HOT</span>
 
-            <a href="#" class="product-card">
-                <span class="product-badge new">NEW</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=AirPods+Max" alt="AirPods Max" class="product-image">
-                <h3 class="product-name">AirPods Max</h3>
-                <div class="product-price">
-                    <span class="current-price">12.990.000₫</span>
-                    <span class="old-price">14.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 1.082.500₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">ANC</span>
-                    <span class="feature-tag">Hi-Fi</span>
-                </div>
-            </a>
+                    <img src="@Url.Content(string.IsNullOrWhiteSpace(p.HinhAnh) ? "~/imgs/no-image.png" : p.HinhAnh)"
+                         alt="@p.Ten"
+                         class="product-image" />
 
-            <a href="#" class="product-card">
-                <span class="product-badge new">NEW</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=Apple+Watch+Ultra+2" alt="Apple Watch Ultra 2" class="product-image">
-                <h3 class="product-name">Apple Watch Ultra 2 49mm</h3>
-                <div class="product-price">
-                    <span class="current-price">19.990.000₫</span>
-                    <span class="old-price">22.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 1.665.833₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">Titanium</span>
-                    <span class="feature-tag">49mm</span>
-                </div>
-            </a>
+                    <h3 class="product-name">@p.Ten</h3>
 
-            <a href="#" class="product-card">
-                <span class="product-badge new">NEW</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=iPad+Air+M2" alt="iPad Air M2" class="product-image">
-                <h3 class="product-name">iPad Air 11" M2 128GB WiFi</h3>
-                <div class="product-price">
-                    <span class="current-price">14.990.000₫</span>
-                    <span class="old-price">16.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 1.249.167₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">M2 chip</span>
-                    <span class="feature-tag">11 inch</span>
-                </div>
-            </a>
+                    <div class="product-price">
+                        <span class="current-price">@p.GiaBan.ToString("N0", new System.Globalization.CultureInfo("vi-VN"))₫</span>
+                    </div>
+
+                    <p class="product-installment">
+                        Trả góp 0% - @(Math.Ceiling(p.GiaBan / 12).ToString("N0", new System.Globalization.CultureInfo("vi-VN")))₫/tháng
+                    </p>
+
+                    <div class="product-features">
+                        <span class="feature-tag">New</span>
+                    </div>
+                </a>
+            }
         </div>
-        <!-- New Products Section -->
+
+        <!-- iPad Section -->
         <div class="section-title">
-            <h2><i class="bi bi-apple"></i> Ipad</h2>
-            <a href="#" class="view-all">Xem tất cả →</a>
+            <h2><i class="bi bi-tablet"></i> iPad</h2>
+            <a asp-controller="Products" asp-action="Category" asp-route-id="3" class="view-all">Xem tất cả →</a>
         </div>
+
         <div class="product-grid">
-            <a href="#" class="product-card">
-                <span class="product-badge new">NEW</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=iPhone+15+Plus" alt="iPhone 15 Plus" class="product-image">
-                <h3 class="product-name">iPhone 15 Plus 128GB</h3>
-                <div class="product-price">
-                    <span class="current-price">24.990.000₫</span>
-                    <span class="old-price">27.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 2.082.500₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">6.7"</span>
-                    <span class="feature-tag">48MP</span>
-                </div>
-            </a>
+            @foreach (var p in Model.Ipads)
+            {
+                <a asp-controller="Products" asp-action="Detail" asp-route-id="@p.Id" class="product-card">
+                    <span class="product-badge">HOT</span>
 
-            <a href="#" class="product-card">
-                <span class="product-badge new">NEW</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=AirPods+Max" alt="AirPods Max" class="product-image">
-                <h3 class="product-name">AirPods Max</h3>
-                <div class="product-price">
-                    <span class="current-price">12.990.000₫</span>
-                    <span class="old-price">14.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 1.082.500₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">ANC</span>
-                    <span class="feature-tag">Hi-Fi</span>
-                </div>
-            </a>
+                    <img src="@Url.Content(string.IsNullOrWhiteSpace(p.HinhAnh) ? "~/imgs/no-image.png" : p.HinhAnh)"
+                         alt="@p.Ten" class="product-image" />
 
-            <a href="#" class="product-card">
-                <span class="product-badge new">NEW</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=Apple+Watch+Ultra+2" alt="Apple Watch Ultra 2" class="product-image">
-                <h3 class="product-name">Apple Watch Ultra 2 49mm</h3>
-                <div class="product-price">
-                    <span class="current-price">19.990.000₫</span>
-                    <span class="old-price">22.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 1.665.833₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">Titanium</span>
-                    <span class="feature-tag">49mm</span>
-                </div>
-            </a>
+                    <h3 class="product-name">@p.Ten</h3>
 
-            <a href="#" class="product-card">
-                <span class="product-badge new">NEW</span>
-                <img src="https://via.placeholder.com/250x220/f5f5f7/333?text=iPad+Air+M2" alt="iPad Air M2" class="product-image">
-                <h3 class="product-name">iPad Air 11" M2 128GB WiFi</h3>
-                <div class="product-price">
-                    <span class="current-price">14.990.000₫</span>
-                    <span class="old-price">16.990.000₫</span>
-                </div>
-                <p class="product-installment">Trả góp 0% - 1.249.167₫/tháng</p>
-                <div class="product-features">
-                    <span class="feature-tag">M2 chip</span>
-                    <span class="feature-tag">11 inch</span>
-                </div>
-            </a>
+                    <div class="product-price">
+                        <span class="current-price">@p.GiaBan.ToString("N0", new System.Globalization.CultureInfo("vi-VN"))₫</span>
+                    </div>
+
+                    <p class="product-installment">
+                        Trả góp 0% - @(Math.Ceiling(p.GiaBan / 12).ToString("N0", new System.Globalization.CultureInfo("vi-VN")))₫/tháng
+                    </p>
+
+                    <div class="product-features">
+                        <span class="feature-tag">New</span>
+                    </div>
+                </a>
+            }
         </div>
+
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Về TopZone</h3>
-                    <ul>
-                        <li><a href="#">Giới thiệu</a></li>
-                        <li><a href="#">Tuyển dụng</a></li>
-                        <li><a href="#">Hệ thống cửa hàng</a></li>
-                        <li><a href="#">Trung tâm bảo hành</a></li>
-                        <li><a href="#">Chính sách bảo mật</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Chính sách</h3>
-                    <ul>
-                        <li><a href="#">Chính sách bảo hành</a></li>
-                        <li><a href="#">Chính sách đổi trả</a></li>
-                        <li><a href="#">Chính sách trả góp</a></li>
-                        <li><a href="#">Chính sách giao hàng</a></li>
-                        <li><a href="#">Chính sách thanh toán</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Hỗ trợ khách hàng</h3>
-                    <ul>
-                        <li><a href="#">Hướng dẫn mua hàng</a></li>
-                        <li><a href="#">Hướng dẫn thanh toán</a></li>
-                        <li><a href="#">Câu hỏi thường gặp</a></li>
-                        <li><a href="#">Kiểm tra đơn hàng</a></li>
-                        <li><a href="#">Liên hệ hỗ trợ</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Liên hệ</h3>
-                    <ul>
-                        <li>📞 Hotline: 1900.6626</li>
-                        <li>📧 Email: support@topzone.vn</li>
-                        <li>📍 Địa chỉ: 261 Lê Lợi, Q.1, TP.HCM</li>
-                        <li>🕐 8:00 - 22:00 (Cả tuần)</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 TopZone - Apple Premium Reseller. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+   
 </body>
 </html>

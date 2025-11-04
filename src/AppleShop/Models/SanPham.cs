@@ -4,27 +4,14 @@ namespace AppleShop.Models
 {
     public class SanPham
     {
-        [Key]
-        public int MaSanPham { get; set; }
-
-        [Required, StringLength(150)]
-        [Display(Name = "Tên sản phẩm")]
-        public string TenSanPham { get; set; } = "";
-
-        [StringLength(100)]
-        [Display(Name = "Loại sản phẩm")]
-        public string? LoaiSanPham { get; set; }
-
-        [Range(0, double.MaxValue)]
-        [Display(Name = "Giá bán")]
-        public decimal GiaBan { get; set; }
-
-        [StringLength(500)]
-        [Display(Name = "Hình ảnh")]
-        public string? HinhAnh { get; set; }
-
-        [StringLength(2000)]
-        [Display(Name = "Mô tả")]
-        public string? MoTa { get; set; }
+        public int SanPhamId { get; set; }      // cột: SanPhamId
+        public string Ten { get; set; } = "";   // cột: Ten
+        public string? MoTa { get; set; }       // cột: MoTa
+        public decimal GiaBan { get; set; }     // cột: GiaBan
+        public string? HinhAnh { get; set; }    // cột: HinhAnh (ví dụ: /imgs/iphone/iphone17.png)
+        public int DanhMucId { get; set; }      // cột: DanhMucId (iPhone = 1 theo ảnh bạn gửi)
+        public DanhMuc? DanhMuc { get; set; }
+        public bool NoiBat { get; set; }        // cột: NoiBat
+        public DateTime NgayTao { get; set; }   // cột: NgayTao
     }
 }

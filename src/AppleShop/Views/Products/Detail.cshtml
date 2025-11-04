@@ -1,0 +1,209 @@
+﻿@model AppleShop.Models.ViewModels.ProductDetailVM
+@using System.Globalization
+@{
+    ViewData["Title"] = ViewData["Title"] ?? (Model.Ten + " | AppleShop");
+}
+
+<nav class="breadcrumb">
+    <a asp-controller="Home" asp-action="Index">Trang chủ</a> /
+    <span>@(Model.DanhMucTen ?? "Sản phẩm")</span> /
+    <strong>@Model.Ten</strong>
+</nav>
+<style>
+    body {
+        background: #1e1e1e;
+        color: #f5f5f7;
+   
+    }
+    .product-page {
+        max-width: 1200px;
+        margin: 60px auto;
+        padding: 0 20px;
+    }
+    .product-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+    }
+    .product-gallery { text-align: center; }
+    .product-gallery .main-image {
+        width: 100%;
+        border-radius: 20px;
+      
+    }
+    .thumbs {
+        display: flex; justify-content: center; gap: 10px; margin-top: 10px;
+    }
+    .thumbs img {
+        width: 70px; height: 70px; object-fit: contain; border-radius: 8px;
+        background: #333; cursor: pointer; border: 2px solid transparent;
+    }
+    .thumbs img.active { border-color: #0071e3; }
+    .product-info h1 { font-size: 30px; margin-bottom: 10px; }
+    .sub-info { color: #ccc; margin-bottom: 8px; }
+    .product-price { font-size: 32px; font-weight: 700; color: #ffb84d; }
+    .bonus {
+        margin-top: 5px; background: #f6e27a; color: #222;
+        display: inline-block; padding: 6px 14px; border-radius: 10px;
+        font-size: 14px; margin-bottom: 20px;
+    }
+    .section h4 { margin-bottom: 6px; color: #ddd; }
+    .options { display: flex; gap: 10px; margin-bottom: 20px; }
+    .option {
+        background: #333; border-radius: 8px; padding: 8px 16px; cursor: pointer;
+    }
+    .option.active { background: #0071e3; }
+    .colors { display: flex; gap: 10px; margin-bottom: 20px; }
+    .color {
+        width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+        border: 2px solid transparent;
+    }
+    .color.active { border: 2px solid #fff; }
+    .promo-box {
+        background: #2e2e2e; border-radius: 16px; padding: 20px; margin-top: 10px;
+    }
+    .promo-box h4 { margin-bottom: 8px; color: #fff; }
+    .promo-box ul { list-style: none; padding: 0; margin: 0; }
+    .promo-box li { color: #ccc; margin-bottom: 6px; font-size: 15px; }
+    .buttons { margin-top: 30px; display: flex; gap: 16px; }
+    .btn-buy {
+        background: #0071e3; border: none; color: #fff; font-weight: 600;
+        padding: 14px 32px; border-radius: 12px; font-size: 16px; cursor: pointer;
+    }
+    .btn-buy:hover { background: #005bb5; }
+    .btn-cart {
+        background: transparent; border: 1px solid #555; color: #fff;
+        font-weight: 600; padding: 14px 32px; border-radius: 12px; cursor: pointer;
+    }
+    .btn-cart:hover { background: #333; }
+    .related-section { margin-top: 80px; }
+    .related-grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 24px; margin-top: 20px;
+    }
+    .related-card {
+        background: #2a2a2a; border-radius: 16px; padding: 16px;
+        text-align: center; text-decoration: none; color: #fff; transition: 0.3s;
+    }
+    .related-card:hover { transform: translateY(-5px); }
+    .related-card img {
+        width: 100%; height: 200px; object-fit: contain; background: #333; border-radius: 10px;
+    }
+    .related-card .price { color: #ffb84d; margin-top: 8px; font-weight: 600; }
+
+    .product-price {
+        display: flow;}
+
+    .desc-box {
+        max-width: 1200px;
+        margin: 30px auto 0;
+        padding: 20px;
+        border-radius: 16px;
+        background: #242424;
+    }
+
+        .desc-box h2 {
+            margin: 0 0 12px;
+        }
+
+    .desc-content {
+        line-height: 1.8;
+        color: #ddd;
+        font-size: 16px;
+    }
+
+</style>
+
+<div class="product-page">
+    <div class="product-container">
+        <!-- Left: Hình ảnh chính và gallery -->
+        <div class="product-gallery">
+            <img class="main-image"
+                 src="@Url.Content(string.IsNullOrWhiteSpace(Model.HinhAnh) ? "~/imgs/no-image.png" : Model.HinhAnh)"
+                 alt="@Model.Ten" />
+            <div class="thumbs">
+                <img src="@Url.Content(Model.HinhAnh)" alt="thumb" class="active" />
+                <img src="@Url.Content(Model.HinhAnh)" alt="thumb" />
+                <img src="@Url.Content(Model.HinhAnh)" alt="thumb" />
+            </div>
+        </div>
+
+        <!-- Right: Thông tin sản phẩm -->
+        <div class="product-info">
+            <h1>@Model.Ten</h1>
+          
+            <div class="product-price">
+              Giá Bán:  @Model.GiaBan.ToString("N0", new CultureInfo("vi-VN"))₫
+            </div>
+
+            <div class="bonus">+10.000 điểm tích lũy Quà Tặng VIP 🎁</div>
+
+            <div class="section">
+                <h4>Dung lượng</h4>
+                <div class="options">
+                    <span class="option active">256GB</span>
+                    <span class="option">512GB</span>
+                    <span class="option">1TB</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <h4>Màu sắc</h4>
+                <div class="colors">
+                    <span class="color active" style="background:#e66000;"></span>
+                    <span class="color" style="background:#1f2340;"></span>
+                    <span class="color" style="background:#ddd;"></span>
+                </div>
+            </div>
+
+            <div class="promo-box">
+                <h4>Khuyến mãi trị giá 500.000₫</h4>
+                <ul>
+                    <li>Phiếu mua hàng AirPods, Apple Watch, Macbook trị giá 500.000₫</li>
+                    <li>Thu cũ đổi mới: Giảm đến 3.000.000₫ (Không kèm ưu đãi thanh toán qua cổng)</li>
+                    <li>PMH phụ kiện bảo vệ iPhone trị giá 150.000₫</li>
+                </ul>
+            </div>
+
+            <div class="buttons">
+                <button class="btn-buy">Mua ngay</button>
+                <button class="btn-cart">Thêm vào giỏ</button>
+            </div>
+        </div>
+    </div>
+    <div class="desc-box">
+        <h2>Mô tả sản phẩm</h2>
+        @{
+            var mota = Model.MoTa ?? "";
+            // Encode để tránh XSS rồi xuống dòng giữ format
+            var motaHtml = System.Net.WebUtility.HtmlEncode(mota).Replace("\n", "<br/>");
+        }
+        <div class="desc-content">
+            @if (string.IsNullOrWhiteSpace(mota))
+            {
+                <p>Đang cập nhật...</p>
+            }
+            else
+            {
+                @Html.Raw(motaHtml)
+            }
+        </div>
+    </div>
+
+    @if (Model.Related?.Any() == true)
+    {
+        <div class="related-section">
+            <h2>Sản phẩm liên quan</h2>
+            <div class="related-grid">
+                @foreach (var p in Model.Related)
+                {
+                    <a asp-controller="Products" asp-action="Detail" asp-route-id="@p.Id" class="related-card">
+                        <img src="@Url.Content(p.HinhAnh)" alt="@p.Ten" />
+                        <h3>@p.Ten</h3>
+                        <div class="price">@p.GiaBan.ToString("N0", new CultureInfo("vi-VN"))₫</div>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>

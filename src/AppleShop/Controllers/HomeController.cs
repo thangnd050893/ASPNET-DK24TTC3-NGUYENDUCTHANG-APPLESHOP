@@ -1,32 +1,54 @@
-using System.Diagnostics;
-using AppleShop.Models;
+﻿using AppleShop.Models;
+using AppleShop.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace AppleShop.Controllers
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly AppleShopContext _db;
+    public HomeController(AppleShopContext db) => _db = db;
+
+    public async Task<IActionResult> Index()
     {
-        private readonly ILogger<HomeController> _logger;
+        // Lấy toàn bộ danh mục cần dùng trước
+        var categories = await _db.DanhMucs
+            .Where(d => d.Ten == "iPhone" || d.Ten == "IPHONE" ||
+                        d.Ten == "Macbook" || d.Ten == "MACBOOK" || d.Ten == "Mac" ||
+                        d.Ten == "iPad" || d.Ten == "IPAD")
+            .Select(d => new { d.DanhMucId, d.Ten })
+            .ToListAsync();
 
-        public HomeController(ILogger<HomeController> logger)
+        int? iphoneId = categories.FirstOrDefault(x => x.Ten.Equals("iPhone", StringComparison.OrdinalIgnoreCase))?.DanhMucId;
+        int? macbookId = categories.FirstOrDefault(x => x.Ten.Equals("Macbook", StringComparison.OrdinalIgnoreCase) || x.Ten.Equals("Mac", StringComparison.OrdinalIgnoreCase))?.DanhMucId;
+        int? ipadId = categories.FirstOrDefault(x => x.Ten.Equals("iPad", StringComparison.OrdinalIgnoreCase))?.DanhMucId;
+
+        // Hàm tiện ích để lấy sản phẩm theo danh mục
+        async Task<List<ProductCardVM>> GetProducts(int? cateId)
         {
-            _logger = logger;
+            if (cateId == null) return new List<ProductCardVM>();
+
+            return await _db.SanPhams
+                .Where(p => p.DanhMucId == cateId)
+                .OrderByDescending(p => p.NgayTao)
+                .Take(8)
+                .Select(p => new ProductCardVM
+                {
+                    Id = p.SanPhamId,
+                    Ten = p.Ten,
+                    GiaBan = p.GiaBan,
+                    HinhAnh = p.HinhAnh
+                })
+                .ToListAsync();
         }
 
-        public IActionResult Index()
+        // Gán dữ liệu vào ViewModel
+        var vm = new HomeIndexVM
         {
-            return View();
-        }
+            Iphones = await GetProducts(iphoneId),
+            Macbooks = await GetProducts(macbookId),
+            Ipads = await GetProducts(ipadId)
+        };
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        return View(vm);
     }
 }

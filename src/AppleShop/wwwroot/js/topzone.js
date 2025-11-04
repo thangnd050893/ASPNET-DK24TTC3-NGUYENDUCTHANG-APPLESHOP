@@ -53,6 +53,38 @@ function nextSlide() {
     showSlide(currentSlideIndex + 1);
 }
 
+function prevSlide() {
+    showSlide(currentSlideIndex - 1);
+}
+
+setInterval(nextSlide, 5000);
+showSlide(0);
+
+
+function showSlide(index) {
+    if (index >= slides.length) {
+        currentSlideIndex = 0;
+    } else if (index < 0) {
+        currentSlideIndex = slides.length - 1;
+    } else {
+        currentSlideIndex = index;
+    }
+
+    slider.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlideIndex);
+    });
+}
+
+function currentSlide(index) {
+    showSlide(index);
+}
+
+function nextSlide() {
+    showSlide(currentSlideIndex + 1);
+}
+
 // Auto slide every 5 seconds
 setInterval(nextSlide, 5000);
 
