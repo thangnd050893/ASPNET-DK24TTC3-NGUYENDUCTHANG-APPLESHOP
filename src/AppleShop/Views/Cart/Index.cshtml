@@ -10,7 +10,7 @@
 
     @if (!Model.Items.Any())
     {
-        <div class="alert alert-info">Giỏ hàng trống. <a asp-controller="Home" asp-action="Index">Tiếp tục mua sắm</a>.</div>
+        <div class="alert alert-info">Giỏ hàng của bạn chưa có sản phẩm nào! <a asp-controller="Home" asp-action="Index">Tiếp tục mua sắm</a>.</div>
     }
     else
     {
@@ -35,7 +35,7 @@
                                      style="width:70px;height:70px;object-fit:contain;border-radius:8px;background:#f5f5f7;" />
                             </td>
                             <td>@i.Ten</td>
-                            <td class="text-end">@i.DonGia.ToString("N0", new CultureInfo("vi-VN"))₫</td>
+                            <td class="text-end">@i.GiaBan.ToString("N0", new CultureInfo("vi-VN"))₫</td>
                             <td class="text-center">
                                 <form asp-action="Update" asp-controller="Cart" asp-route-id="@i.ProductId" method="post" class="d-inline-flex" style="gap:6px;justify-content:center;">
                                     <input type="number" name="qty" value="@i.SoLuong" min="1" class="form-control" style="width:90px;" />

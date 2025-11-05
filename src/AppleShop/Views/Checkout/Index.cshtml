@@ -1,0 +1,109 @@
+﻿@model AppleShop.Models.ViewModels.CheckoutVM
+@using System.Globalization
+@{
+    ViewData["Title"] = "Thanh Toán";
+}
+<div class="container py-4">
+    <h2 class="mb-4">Thanh toán</h2>
+
+    <form asp-action="Index" method="post" class="row g-4">
+        @Html.AntiForgeryToken()
+
+        <!-- Thông tin người nhận -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Thông tin nhận hàng</h5>
+
+                    <div class="mb-3">
+                        <label asp-for="HoTen" class="form-label"></label>
+                        <input asp-for="HoTen" class="form-control" />
+                        <span class="text-danger" asp-validation-for="HoTen"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DienThoai" class="form-label"></label>
+                        <input asp-for="DienThoai" class="form-control" />
+                        <span class="text-danger" asp-validation-for="DienThoai"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DiaChi" class="form-label"></label>
+                        <textarea asp-for="DiaChi" class="form-control" rows="3"></textarea>
+                        <span class="text-danger" asp-validation-for="DiaChi"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="GhiChu" class="form-label"></label>
+                        <textarea asp-for="GhiChu" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="mb-2">
+                        <label asp-for="PhuongThucThanhToan" class="form-label"></label>
+                        <select asp-for="PhuongThucThanhToan" class="form-select">
+                            <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+                            <option value="BANK">Chuyển khoản ngân hàng</option>
+                            <option value="VNPAY">VNPay / QR</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="PhuongThucThanhToan"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tóm tắt đơn hàng -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Đơn hàng của bạn</h5>
+
+                    <ul class="list-group list-group-flush mb-3">
+                        @foreach (var i in Model.Items)
+                        {
+                            <li class="list-group-item d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center" style="gap:10px;">
+                                    <img src="@Url.Content(string.IsNullOrWhiteSpace(i.HinhAnh) ? "~/imgs/no-image.png" : i.HinhAnh)"
+                                         alt="@i.Ten" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#f5f5f7;">
+                                    <div>
+                                        <div class="fw-semibold">@i.Ten</div>
+                                        <div class="text-muted small">x @i.SoLuong</div>
+                                    </div>
+                                </div>
+                                <div class="fw-semibold">
+                                    @((i.GiaBan * i.SoLuong).ToString("N0", new CultureInfo("vi-VN")))đ
+                                </div>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tạm tính</span>
+                        <span class="fw-semibold">@Model.SubTotal.ToString("N0", new CultureInfo("vi-VN"))đ</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Phí vận chuyển</span>
+                        <span class="fw-semibold">@Model.Shipping.ToString("N0", new CultureInfo("vi-VN"))đ</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between mb-3 fs-5">
+                        <span>Tổng cộng</span>
+                        <span class="fw-bold text-primary">
+                            @Model.Total.ToString("N0", new CultureInfo("vi-VN"))đ
+                        </span>
+                    </div>
+
+                    <button class="btn btn-primary w-100" type="submit">
+                        Đặt hàng ngay
+                    </button>
+                    <div class="text-muted small mt-2">
+                        Bấm “Đặt hàng ngay” là bạn đã đồng ý với các điều khoản mua hàng của AppleShop.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

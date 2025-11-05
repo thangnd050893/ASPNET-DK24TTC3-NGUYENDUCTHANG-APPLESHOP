@@ -1,24 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AppleShop.Models
+﻿namespace AppleShop.Models
 {
     public class ChiTietDonHang
     {
-        [Key]
-        public int MaChiTiet { get; set; }
+        public int ChiTietDonHangId { get; set; }
 
-        [Display(Name = "Mã sản phẩm")]
-        public int MaSanPham { get; set; }
+        public int DonHangId { get; set; }
+        public DonHang DonHang { get; set; } = null!;
+
+        public int SanPhamId { get; set; }
         public SanPham? SanPham { get; set; }
 
-        [Display(Name = "Số lượng")]
         public int SoLuong { get; set; }
-
-        [Display(Name = "Giá bán")]
-        public decimal GiaBan { get; set; }
-
-        [Display(Name = "Mã đơn hàng")]
-        public int MaDonHang { get; set; }
-        public DonHang? DonHang { get; set; }
+        public decimal DonGia { get; set; }   // giá tại thời điểm đặt
+        public decimal ThanhTien => SoLuong * DonGia;
     }
 }
