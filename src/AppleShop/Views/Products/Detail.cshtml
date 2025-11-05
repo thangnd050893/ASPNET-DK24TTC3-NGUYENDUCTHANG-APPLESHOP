@@ -72,7 +72,8 @@
     }
     .btn-buy:hover { background: #005bb5; }
     .btn-cart {
-        background: transparent; border: 1px solid #555; color: #fff;
+        background-color: white;
+        border: 1px solid #555;
         font-weight: 600; padding: 14px 32px; border-radius: 12px; cursor: pointer;
     }
     .btn-cart:hover { background: #333; }
@@ -166,9 +167,15 @@
             </div>
 
             <div class="buttons">
-                <button class="btn-buy">Mua ngay</button>
-                <button class="btn-cart">Thêm vào giỏ</button>
+                <form asp-controller="Cart" asp-action="Add" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    <input type="hidden" name="qty" value="1" />
+                    <button class="btn-buy" type="submit">Thêm vào giỏ</button>
+                </form>
+
+                <a class="btn-cart" asp-controller="Cart" asp-action="Index">Xem giỏ hàng</a>
             </div>
+
+
         </div>
     </div>
     <div class="desc-box">

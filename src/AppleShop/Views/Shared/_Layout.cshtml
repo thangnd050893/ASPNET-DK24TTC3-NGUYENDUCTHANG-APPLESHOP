@@ -42,10 +42,15 @@
 
                 <div class="nav-icons">
                     <button class="icon-btn">🔍</button>
-                    <button class="icon-btn cart-icon">
+                    <a href="/cart" class="icon-btn cart-icon" style="position:relative;">
                         🛒
-                        <span class="cart-badge">0</span>
-                    </button>
+                        <span id="cart-count" class="cart-badge"
+                              style="position:absolute; top:-5px; right:-10px; background:#ff4444; color:white;
+                 font-size:13px; border-radius:50%; padding:2px 7px; min-width:20px; text-align:center;">
+                            0
+                        </span>
+                    </a>
+
                 </div>
             </div>
         </nav>
@@ -124,10 +129,26 @@
             </div>
         </div>
     </footer>
+    <script>
+        async function updateCartCount() {
+            try {
+                const res = await fetch('/cart/count');
+                const count = await res.text();
+                document.getElementById('cart-count').innerText = count;
+            } catch (e) {
+                console.error("Không thể lấy số lượng giỏ hàng:", e);
+            }
+        }
+
+        // Gọi khi load trang
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/topzone.js" defer></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>
