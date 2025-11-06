@@ -1,117 +1,157 @@
-﻿using System.Globalization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using AppleShop.Models;
 using AppleShop.Models.ViewModels;
-using AppleShop.Utils;
-using System.Linq; // Cần thêm để sử dụng Linq
+using AppleShop.Utils;                 // SessionExtensions (GetObject/SetObject)
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppleShop.Controllers
 {
     public class CheckoutController : Controller
     {
-        // Dùng hằng số key cho Session (nên thống nhất giữa các Controller)
-        private const string CART_KEY = "CART";
-
         private readonly AppleShopContext _db;
         public CheckoutController(AppleShopContext db) => _db = db;
+
+        // =================================================================
+        // SỬA 1: Thay đổi kiểu trả về từ List<CartItemVM> thành CartVM
+        // =================================================================
+        private CartVM GetCart() =>
+            HttpContext.Session.GetObject<CartVM>("CART") ?? new CartVM();
 
         // GET /checkout
         [HttpGet("/checkout")]
         public IActionResult Index()
         {
-            // FIX LỖI QUAN TRỌNG NHẤT: Đọc đối tượng CartVM từ Session (Đúng kiểu dữ liệu đã lưu)
-            var cartVM = HttpContext.Session.GetObject<CartVM>(CART_KEY)
-                       ?? new CartVM();
+            // 'cart' bây giờ là một đối tượng CartVM
+            var cart = GetCart();
 
-            var cartItems = cartVM.Items; // Lấy danh sách sản phẩm từ CartVM
+            // Nếu giỏ hàng không có sản phẩm, chuyển hướng về trang giỏ hàng
+            if (cart.Items == null || !cart.Items.Any())
+            {
+                return Redirect("/cart");
+            }
 
-            // Nếu giỏ rỗng → về trang giỏ (Điều kiện này bây giờ đã hoạt động đúng)
-            if (cartItems.Count == 0)
-                return RedirectToAction("Index", "Cart");
-
-            // Khởi tạo CheckoutVM
+            // =================================================================
+            // SỬA 2: Lấy Items từ cart.Items và tổng tiền từ cart.TongTien
+            // =================================================================
             var vm = new CheckoutVM
             {
-                Items = cartItems,
-                Shipping = 0 // Giả sử phí ship = 0 hoặc đã được tính
+                Items = cart.Items,
+                SubTotal = cart.TongTien, // Lấy tổng tiền đã tính toán từ CartVM
             };
-
-            // Tính toán SubTotal và Total cho ViewModel
-            // Dùng thuộc tính TongTien của CartVM nếu đã được tính sẵn, hoặc tính lại từ Items
-            vm.SubTotal = cartItems.Sum(x => x.ThanhTien);
+            vm.Shipping = 0; // Bạn có thể thêm logic tính phí vận chuyển ở đây nếu cần
             vm.Total = vm.SubTotal + vm.Shipping;
 
             return View(vm);
         }
 
         // POST /checkout/place-order
-        [ValidateAntiForgeryToken]
         [HttpPost("/checkout/place-order")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> PlaceOrder(CheckoutVM model)
         {
-            // FIX: Lấy lại giỏ từ session dưới dạng CartVM
-            var cartVM = HttpContext.Session.GetObject<CartVM>(CART_KEY) ?? new CartVM();
-            var cartItems = cartVM.Items;
+            // 'cart' là CartVM
+            var cart = GetCart();
 
-            if (cartItems.Count == 0)
+            // =================================================================
+            // SỬA 3: Kiểm tra cart.Items (thay vì cart.Count)
+            // =================================================================
+            if (cart == null || cart.Items == null || !cart.Items.Any())
             {
-                TempData["OrderError"] = "Giỏ hàng rỗng.";
+                TempData["OrderError"] = "Giỏ hàng đang trống.";
                 return RedirectToAction(nameof(Index));
             }
 
+            // Nếu model không hợp lệ, trả về View với thông tin giỏ hàng
             if (!ModelState.IsValid)
             {
-                // Tính lại tổng để view render được
-                model.Items = cartItems;
-                model.SubTotal = cartItems.Sum(x => x.ThanhTien);
+                // =================================================================
+                // SỬA 4: Gán lại Items và TongTien từ CartVM
+                // =================================================================
+                model.Items = cart.Items;
+                model.SubTotal = cart.TongTien;
+                model.Shipping = 0;
                 model.Total = model.SubTotal + model.Shipping;
                 return View("Index", model);
             }
 
-            // ===== TẠO ĐƠN HÀNG =====
-            var order = new DonHang
+            using var tx = await _db.Database.BeginTransactionAsync();
+            try
             {
-                HoTen = model.HoTen,
-                DienThoai = model.DienThoai,
-                DiaChi = model.DiaChi,
-                GhiChu = model.GhiChu,
-                PhuongThucThanhToan = model.PhuongThucThanhToan,
-
-                NgayTao = DateTime.Now,
-
-                // Sử dụng tổng tiền đã tính hoặc tính lại từ cartItems
-                TongTien = cartItems.Sum(x => x.ThanhTien),
-
-                ChiTietDonHangs = new List<ChiTietDonHang>()
-            };
-
-            foreach (var i in cartItems)
-            {
-                order.ChiTietDonHangs.Add(new ChiTietDonHang
+                var order = new DonHang
                 {
-                    SanPhamId = i.ProductId,
-                    SoLuong = i.SoLuong,
-                    DonGia = i.GiaBan // Đã được sửa để dùng GiaBan thay vì DonGia nếu cần
-                });
+                    HoTen = model.HoTen,
+                    DienThoai = model.DienThoai,
+                    DiaChi = model.DiaChi,
+                    GhiChu = model.GhiChu,
+                    PhuongThucThanhToan = model.PhuongThucThanhToan,
+
+                    // =================================================================
+                    // SỬA 5: Lấy tổng tiền trực tiếp từ cart.TongTien
+                    // =================================================================
+                    TongTien = cart.TongTien,
+
+                    NgayTao = DateTime.Now,
+                    MaDon = $"DH{DateTime.Now:yyyyMMddHHmmssfff}", // Tạo mã đơn duy nhất
+                    ChiTietDonHangs = new List<ChiTietDonHang>()
+                };
+
+                // =================================================================
+                // SỬA 6: Duyệt qua cart.Items (thay vì cart)
+                // =================================================================
+                foreach (var i in cart.Items)
+                {
+                    order.ChiTietDonHangs.Add(new ChiTietDonHang
+                    {
+                        SanPhamId = i.ProductId,
+                        SoLuong = i.SoLuong,
+                        DonGia = i.GiaBan
+                    });
+                }
+
+                _db.DonHangs.Add(order);
+                await _db.SaveChangesAsync();
+                await tx.CommitAsync();
+
+                // =================================================================
+                // SỬA 7: Xoá giỏ hàng bằng cách lưu một CartVM rỗng
+                // =================================================================
+                HttpContext.Session.SetObject("CART", new CartVM());
+
+                return RedirectToAction(nameof(Success), new { id = order.DonHangId });
             }
+            catch
+            {
+                await tx.RollbackAsync();
 
-            _db.DonHangs.Add(order);
-            await _db.SaveChangesAsync();
+                TempData["OrderError"] = "Có lỗi khi lưu đơn hàng. Vui lòng thử lại!";
 
-            // FIX: Xoá giỏ bằng cách lưu một CartVM MỚI (rỗng)
-            HttpContext.Session.SetObject(CART_KEY, new CartVM());
-
-            TempData["OrderSuccess"] = $"Đặt hàng thành công! Mã đơn: {order.DonHangId}";
-            return RedirectToAction(nameof(Success));
+                // Gán lại thông tin giỏ hàng nếu có lỗi
+                model.Items = cart.Items;
+                model.SubTotal = cart.TongTien;
+                model.Shipping = 0;
+                model.Total = model.SubTotal + model.Shipping;
+                return View("Index", model);
+            }
         }
 
-        // GET /checkout/success
-        [HttpGet("/checkout/success")]
-        public IActionResult Success()
+        // GET /checkout/success/{id}
+        [HttpGet("/checkout/success/{id:int}")]
+        public async Task<IActionResult> Success(int id)
         {
-            ViewBag.Message = TempData["OrderSuccess"] as string;
-            return View();
+            // Phần này không phụ thuộc vào session giỏ hàng nên đã đúng
+            var order = await _db.DonHangs
+                .Include(x => x.ChiTietDonHangs)
+                .ThenInclude(x => x.SanPham)
+                .FirstOrDefaultAsync(x => x.DonHangId == id);
+
+            if (order == null)
+                return RedirectToAction(nameof(Index));
+
+            return View(order); // model = DonHang
         }
     }
 }

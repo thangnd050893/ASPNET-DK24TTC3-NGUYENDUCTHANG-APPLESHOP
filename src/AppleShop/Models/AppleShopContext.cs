@@ -11,6 +11,7 @@ namespace AppleShop.Models
         public DbSet<DanhMuc> DanhMucs { get; set; }
         public DbSet<DonHang> DonHangs { get; set; } = null!;
         public DbSet<ChiTietDonHang> ChiTietDonHangs { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

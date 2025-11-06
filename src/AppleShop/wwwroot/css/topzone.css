@@ -765,3 +765,32 @@ footer.border-top.footer.text-muted {
     line-height: 20px;
     margin-bottom: -100px;
 }
+.success-hero{
+    background: linear-gradient(135deg,#16a085 0%,#2ecc71 100%);
+    border-radius: 16px;
+    color:#fff;
+    padding:28px 20px;
+    position: relative;
+    overflow: hidden;
+}
+.success-hero .tick{
+    width:56px;height:56px;border-radius:50%;
+    background:#fff;display:flex;align-items:center;justify-content:center;
+    color:#2ecc71;font-size:28px;font-weight:700;margin-right:12px;
+    box-shadow:0 6px 16px rgba(0,0,0,.15)
+}
+.chip{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 10px;border-radius:999px;
+    background:rgba(255,255,255,.18);backdrop-filter: blur(4px)
+}
+.card-soft{border:0;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.list-group-item{border:0;border-bottom:1px dashed #eee}
+.list-group-item:last-child{border-bottom:0}
+.price{font-weight:700}
+.muted{color:#6c757d}
+.divider{height:1px;background:#f0f0f0;margin:10px 0 14px}
+
+@media (max-width: 575.98px){
+    .success-hero{padding:22px 16px}
+}

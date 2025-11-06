@@ -1,74 +1,488 @@
 ﻿@model AppleShop.Models.ViewModels.CartVM
 @using System.Globalization
-
 @{
     ViewData["Title"] = "Giỏ hàng";
+    var vi = new CultureInfo("vi-VN");
 }
 
-<div class="container" style="max-width:1000px;margin:40px auto;">
-    <h1 class="mb-3">Giỏ hàng</h1>
+<style>
+    /* Kế thừa style từ Checkout */
+    body {
+        background-color: #f4f4f5; /* Nền xám nhạt */
+    }
+
+    .cart-container {
+        max-width: 1200px; /* Rộng hơn 1 chút cho giỏ hàng */
+    }
+
+    .cart-title {
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 1.5rem; /* 24px */
+    }
+
+    .cart-card {
+        background-color: #ffffff;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+        padding: 2rem; /* 32px */
+    }
+
+        .cart-card .card-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+    /* Tùy chỉnh danh sách sản phẩm (thay thế table) */
+    .product-list-cart {
+        padding-left: 0;
+        list-style-type: none;
+        margin: 0;
+    }
+
+    /* Tiêu đề cho danh sách sản phẩm */
+    .cart-header {
+        display: none; /* Ẩn trên mobile */
+        justify-content: space-between;
+        font-weight: 600;
+        color: #777;
+        font-size: 0.85rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f0f0f0;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+        .cart-header .col-product {
+            flex: 1 1 35%;
+        }
+
+        .cart-header .col-price {
+            flex: 1 1 15%;
+            text-align: right;
+        }
+
+        .cart-header .col-quantity {
+            flex: 1 1 30%;
+            text-align: center;
+        }
+
+        .cart-header .col-subtotal {
+            flex: 1 1 15%;
+            text-align: right;
+        }
+
+        .cart-header .col-remove {
+            flex: 0 0 5%;
+        }
+
+    /* Từng sản phẩm */
+    .product-item {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap; /* Xuống dòng trên mobile */
+        justify-content: space-between;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .product-list-cart li:last-child .product-item {
+        border-bottom: none;
+    }
+
+    .product-item .col-product {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex: 1 1 35%;
+        min-width: 250px; /* Đảm bảo không bị vỡ */
+    }
+
+        .product-item .col-product img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            border-radius: 12px;
+            background-color: #f8f9fa;
+            border: 1px solid #eee;
+        }
+
+    .product-info .name {
+        font-weight: 600;
+        color: #222;
+        line-height: 1.4;
+        text-decoration: none;
+    }
+
+        .product-info .name:hover {
+            color: #0d6efd;
+        }
+
+    .product-item .col-price,
+    .product-item .col-subtotal {
+        font-weight: 600;
+        color: #111;
+        text-align: right;
+    }
+
+    .product-item .col-price {
+        flex: 1 1 15%;
+    }
+
+    .product-item .col-subtotal {
+        flex: 1 1 15%;
+    }
+
+    .product-item .col-quantity {
+        flex: 1 1 30%;
+    }
+
+    .product-item .col-remove {
+        flex: 0 0 5%;
+        text-align: right;
+    }
+
+    /* Tùy chỉnh form số lượng */
+    .quantity-form {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .quantity-form .form-control {
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+            width: 80px;
+            text-align: center;
+        }
+
+        .quantity-form .btn-update {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+            .quantity-form .btn-update:hover {
+                background-color: #5a6268;
+            }
+
+    /* Nút Xoá */
+    .btn-remove {
+        background: none;
+        border: none;
+        color: #d70018;
+        font-size: 1.1rem;
+        padding: 5px;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+    }
+
+        .btn-remove:hover {
+            opacity: 1;
+        }
+
+    /* Tóm tắt đơn hàng (Kế thừa từ Checkout) */
+    .summary-card {
+        position: sticky;
+        top: 20px; /* Dính lại khi cuộn */
+    }
+
+    .cost-summary .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+
+        .cost-summary .summary-row span:first-child {
+            color: #555;
+        }
+
+        .cost-summary .summary-row span.price {
+            font-weight: 600;
+            color: #333;
+        }
+
+    .cost-summary .summary-total {
+        border-top: 1px dashed #ccc;
+        padding-top: 1rem;
+        margin-top: 1rem;
+    }
+
+        .cost-summary .summary-total span.total-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .cost-summary .summary-total span.total-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #d70018; /* Màu đỏ */
+        }
+
+    /* Nút Đặt hàng */
+    .btn-place-order {
+        background-color: #0d6efd;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1.1rem;
+        padding: 0.9rem 1.5rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        border: none;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+    }
+
+        .btn-place-order:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
+
+    /* Các nút khác */
+    .cart-actions-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .btn-link-continue {
+        text-decoration: none;
+        color: #0d6efd;
+        font-weight: 500;
+    }
+
+    .btn-clear-cart {
+        background: none;
+        border: none;
+        color: #d70018;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    /* Giao diện giỏ hàng trống */
+    .empty-cart-box {
+        background-color: #fff;
+        border-radius: 16px;
+        padding: 3rem;
+        text-align: center;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    }
+
+        .empty-cart-box h4 {
+            font-weight: 600;
+            color: #333;
+        }
+
+    .btn-continue-shopping {
+        background-color: #0d6efd;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 0.8rem 1.5rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-continue-shopping:hover {
+            background-color: #0b5ed7;
+        }
+
+    /* Responsive cho mobile */
+    @@media (max-width: 991.98px) {
+        .cart-header {
+            display: none; /* Ẩn tiêu đề bảng trên mobile */
+        }
+
+        .product-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+            .product-item > div {
+                width: 100% !important;
+                flex-basis: auto !important;
+                text-align: left !important;
+            }
+
+            .product-item .col-price,
+            .product-item .col-subtotal {
+                text-align: right !important;
+            }
+
+            .product-item .col-quantity {
+                justify-content: space-between;
+                display: flex;
+                align-items: center;
+            }
+
+        .quantity-form {
+            justify-content: flex-start;
+        }
+
+        .product-item .col-remove {
+            text-align: right !important;
+        }
+        /* Thêm label cho mobile */
+        .product-item .col-price::before {
+            content: "Giá: ";
+            font-weight: 500;
+            color: #777;
+        }
+
+        .product-item .col-quantity::before {
+            content: "Số lượng: ";
+            font-weight: 500;
+            color: #777;
+        }
+
+        .product-item .col-subtotal::before {
+            content: "Tạm tính: ";
+            font-weight: 500;
+            color: #777;
+        }
+    }
+
+    @@media (min-width: 992px) {
+        .cart-header {
+            display: flex; /* Hiển thị lại trên desktop */
+        }
+    }
+
+</style>
+
+<div class="container cart-container py-4">
+    <h2 class="cart-title">Giỏ hàng</h2>
 
     @if (!Model.Items.Any())
     {
-        <div class="alert alert-info">Giỏ hàng của bạn chưa có sản phẩm nào! <a asp-controller="Home" asp-action="Index">Tiếp tục mua sắm</a>.</div>
+        <!-- GIAO DIỆN GIỎ HÀNG TRỐNG -->
+        <div class="empty-cart-box">
+            <h4>Giỏ hàng của bạn đang trống</h4>
+            <p class="text-muted my-3">Hãy thêm sản phẩm để tiếp tục mua sắm nhé.</p>
+            <a asp-controller="Home" asp-action="Index" class="btn-continue-shopping">Tiếp tục mua sắm</a>
+        </div>
     }
     else
     {
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <th style="width:80px;"></th>
-                        <th>Sản phẩm</th>
-                        <th class="text-end" style="width:140px;">Đơn giá</th>
-                        <th class="text-center" style="width:160px;">Số lượng</th>
-                        <th class="text-end" style="width:140px;">Thành tiền</th>
-                        <th style="width:80px;"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var i in Model.Items)
-                    {
-                        <tr>
-                            <td>
-                                <img src="@Url.Content(string.IsNullOrWhiteSpace(i.HinhAnh) ? "~/imgs/no-image.png" : i.HinhAnh)"
-                                     style="width:70px;height:70px;object-fit:contain;border-radius:8px;background:#f5f5f7;" />
-                            </td>
-                            <td>@i.Ten</td>
-                            <td class="text-end">@i.GiaBan.ToString("N0", new CultureInfo("vi-VN"))₫</td>
-                            <td class="text-center">
-                                <form asp-action="Update" asp-controller="Cart" asp-route-id="@i.ProductId" method="post" class="d-inline-flex" style="gap:6px;justify-content:center;">
-                                    <input type="number" name="qty" value="@i.SoLuong" min="1" class="form-control" style="width:90px;" />
-                                    <button class="btn btn-outline-secondary" type="submit">Cập nhật</button>
-                                </form>
-                            </td>
-                            <td class="text-end">@i.ThanhTien.ToString("N0", new CultureInfo("vi-VN"))₫</td>
-                            <td>
-                                <form asp-action="Remove" asp-controller="Cart" asp-route-id="@i.ProductId" method="post">
-                                    <button class="btn btn-outline-danger" type="submit">Xoá</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="2">Tổng cộng</th>
-                        <th class="text-end"></th>
-                        <th class="text-center">@Model.TongSoLuong</th>
-                        <th class="text-end">@Model.TongTien.ToString("N0", new CultureInfo("vi-VN"))₫</th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+        <!-- GIAO DIỆN GIỎ HÀNG CÓ SẢN PHẨM -->
+        <div class="row g-4 g-lg-5">
+            <!-- Cột 1: Danh sách sản phẩm -->
+            <div class="col-lg-8">
+                <div class="cart-card">
+                    <!-- Tiêu đề (chỉ cho Desktop) -->
+                    <div class="cart-header">
+                        <div class="col-product">Sản phẩm</div>
+                        <div class="col-price">Đơn giá</div>
+                        <div class="col-quantity">Số lượng</div>
+                        <div class="col-subtotal">Tạm tính</div>
+                        <div class="col-remove"></div>
+                    </div>
 
-        <div class="d-flex justify-content-between mt-3">
-            <form asp-action="Clear" asp-controller="Cart" method="post">
-                <button class="btn btn-outline-secondary" type="submit">Xoá toàn bộ</button>
-            </form>
+                    <!-- Danh sách sản phẩm -->
+                    <ul class="product-list-cart">
+                        @foreach (var i in Model.Items)
+                        {
+                            <li>
+                                <div class="product-item">
+                                    <!-- Sản phẩm -->
+                                    <div class="col-product">
+                                        <img src="@Url.Content(string.IsNullOrWhiteSpace(i.HinhAnh) ? "~/imgs/no-image.png" : i.HinhAnh)"
+                                             alt="@i.Ten" />
+                                        <div class="product-info">
+                                            <a asp-controller="Products" asp-action="Detail" asp-route-id="@i.ProductId" class="name">@i.Ten</a>
+                                        </div>
+                                    </div>
 
-            <a class="btn btn-dark" asp-controller="Checkout" asp-action="Index">Tiến hành đặt hàng →</a>
+                                    <!-- Đơn giá -->
+                                    <div class="col-price">
+                                        @i.GiaBan.ToString("N0", vi)đ
+                                    </div>
+
+                                    <!-- Số lượng -->
+                                    <div class="col-quantity">
+                                        <form asp-action="Update" asp-controller="Cart" asp-route-id="@i.ProductId" method="post" class="quantity-form">
+                                            <input type="number" name="qty" value="@i.SoLuong" min="1" class="form-control" />
+                                            <button class="btn btn-update" type="submit">Cập nhật</button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Thành tiền -->
+                                    <div class="col-subtotal">
+                                        @i.ThanhTien.ToString("N0", vi)đ
+                                    </div>
+
+                                    <!-- Xoá -->
+                                    <div class="col-remove">
+                                        <form asp-action="Remove" asp-controller="Cart" asp-route-id="@i.ProductId" method="post">
+                                            <button class="btn-remove" type="submit" title="Xoá sản phẩm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m3 0l-.5 8.5a.5.5 0 1 0 .998.06l.5-8.5a.5.5 0 1 0-.998.06m2.5.029l-.5 8.5a.5.5 0 1 0 .998-.06l.5-8.5a.5.5 0 1 0-.998.06" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- Footer của giỏ hàng -->
+                    <div class="cart-actions-footer">
+                        <a asp-controller="Home" asp-action="Index" class="btn-link-continue">← Tiếp tục mua sắm</a>
+                        <form asp-action="Clear" asp-controller="Cart" method="post">
+                            <button class="btn-clear-cart" type="submit">Xoá toàn bộ giỏ hàng</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột 2: Tóm tắt đơn hàng -->
+            <div class="col-lg-4">
+                <div class="cart-card summary-card">
+                    <h5 class="card-title">Tóm tắt đơn hàng</h5>
+
+                    <!-- Tính tiền -->
+                    <div class="cost-summary">
+                        <div class="summary-row">
+                            <span>Tạm tính (@Model.TongSoLuong sản phẩm)</span>
+                            <span class="price">@Model.TongTien.ToString("N0", vi)đ</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Phí vận chuyển</span>
+                            <span class="price">Miễn phí</span>
+                        </div>
+
+                        <div class="summary-row summary-total">
+                            <span class="total-label">Tổng cộng</span>
+                            <span class="total-value">
+                                @Model.TongTien.ToString("N0", vi)đ
+                            </span>
+                        </div>
+                    </div>
+
+                    <a asp-controller="Checkout" asp-action="Index" class="btn-place-order w-100 mt-4">
+                        Tiến hành đặt hàng
+                    </a>
+                </div>
+            </div>
         </div>
     }
 </div>

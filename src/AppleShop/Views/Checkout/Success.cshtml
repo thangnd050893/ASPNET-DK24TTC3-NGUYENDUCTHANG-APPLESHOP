@@ -1,0 +1,379 @@
+﻿@model AppleShop.Models.DonHang
+@using System.Globalization
+@{
+    ViewData["Title"] = "Đặt hàng thành công";
+    var vi = new CultureInfo("vi-VN");
+
+    // Logic nhỏ để hiển thị trạng thái thanh toán
+    bool isCOD = Model.PhuongThucThanhToan.Equals("COD", StringComparison.OrdinalIgnoreCase);
+}
+
+<style>
+    /* CSS tùy chỉnh cho giao diện mới */
+    body {
+        background-color: #f4f4f5; /* Màu nền xám nhạt */
+    }
+
+    .success-wrapper {
+        max-width: 800px;
+        margin: 30px auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    }
+
+    .success-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 24px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+        .success-header h2 {
+            font-weight: 600;
+            color: #0a8a00; /* Màu xanh lá đậm */
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .success-header .icon-check {
+            width: 32px;
+            height: 32px;
+            color: #0a8a00;
+        }
+
+    /* Nội dung thẻ */
+    .success-body {
+        padding: 24px 32px 32px 32px;
+    }
+
+    .thank-you-msg {
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 8px; /* Giảm margin dưới để dòng mới gần hơn */
+    }
+
+    /* THÊM STYLE MỚI */
+    .confirmation-subtitle {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #111;
+        margin-bottom: 24px;
+    }
+
+    /* Thông tin chính của đơn hàng (số đơn, quản lý) */
+    .order-main-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+        .order-main-info h4 {
+            font-weight: 600;
+            color: #111;
+            margin: 0;
+            font-size: 1.15rem;
+        }
+
+            .order-main-info h4 strong {
+                color: #0d6efd; /* Màu xanh dương */
+            }
+
+        .order-main-info .order-links {
+            font-size: 0.9rem;
+        }
+
+            .order-main-info .order-links a {
+                text-decoration: none;
+                color: #0d6efd;
+                font-weight: 500;
+            }
+
+                .order-main-info .order-links a + a {
+                    margin-left: 12px;
+                }
+
+    /* Danh sách thông tin chi tiết (người nhận, địa chỉ, v.v.) */
+    .order-details-list {
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 20px;
+    }
+
+        .order-details-list li {
+            display: flex;
+            margin-bottom: 14px;
+            font-size: 1rem;
+            line-height: 1.6;
+            align-items: flex-start; /* Căn lề trên cho label và value */
+        }
+
+            .order-details-list li strong {
+                min-width: 160px; /* Cố định độ rộng của nhãn */
+                color: #555;
+                font-weight: 500;
+                display: inline-block;
+                padding-top: 4px; /* Thêm padding cho khớp với text */
+            }
+
+            .order-details-list li .value {
+                font-weight: 600;
+                color: #111;
+                flex-grow: 1;
+            }
+
+            /* Class riêng cho value chứa danh sách sản phẩm */
+            .order-details-list li .value-list {
+                font-weight: normal;
+            }
+
+
+    /* Danh sách sản phẩm trong đơn */
+    .order-products-list {
+        margin-top: 0; /* Bỏ margin-top vì đã có trong .value-list */
+        padding-left: 0;
+        list-style-type: none;
+    }
+
+    /* THAY ĐỔI: CSS cho từng sản phẩm */
+    .product-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.95rem;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+        .product-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .product-item:first-child {
+            padding-top: 0;
+        }
+
+    .product-image-wrapper {
+        flex-shrink: 0;
+    }
+
+        .product-image-wrapper img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            border: 1px solid #eee;
+        }
+
+    .product-info {
+        flex-grow: 1;
+        margin: 0 12px;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .product-info .name {
+            color: #333;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .product-info .quantity {
+            color: #777;
+            font-size: 0.85rem;
+        }
+
+    .product-item .price {
+        color: #111;
+        font-weight: 600;
+        flex-shrink: 0;
+        text-align: right;
+    }
+    /* Kết thúc thay đổi CSS */
+
+    /* Tổng tiền */
+    .summary-total {
+        border-top: 1px dashed #ccc;
+        padding-top: 16px;
+        margin-top: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .summary-total .total-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .summary-total .total-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #d70018; /* Màu đỏ */
+        }
+
+    /* Hộp trạng thái */
+    .status-box {
+        margin-top: 24px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        border: 1px dashed;
+    }
+
+    .status-unpaid { /* Giống hình ảnh (chưa thanh toán) */
+        border-color: #fd7e14;
+        color: #fd7e14;
+        background-color: #fffaf0;
+    }
+
+    .status-paid { /* Đã thanh toán */
+        border-color: #198754;
+        color: #198754;
+        background-color: #f0fff8;
+    }
+
+    /* Nút Về trang chủ */
+    .btn-back-home {
+        background-color: #f1f1f1;
+        color: #333;
+        font-weight: 600;
+        padding: 0.8rem 1.5rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+        .btn-back-home:hover {
+            background-color: #e5e5e5;
+            color: #111;
+        }
+
+</style>
+
+<div class="container py-4">
+    <div class="success-wrapper">
+        <!-- Tiêu đề -->
+        <div class="success-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-check-circle-fill icon-check" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+            </svg>
+            <h2>Đặt hàng thành công</h2>
+        </div>
+
+        <div class="success-body">
+            <!-- Lời cảm ơn -->
+            <p class="thank-you-msg">
+                Cảm ơn <strong>@Model.HoTen</strong> đã cho AppleShop cơ hội được phục vụ.
+            </p>
+
+            <!-- THÊM DÒNG MỚI TẠI ĐÂY -->
+            <p class="confirmation-subtitle">
+                Chúng tôi sẽ gọi lại cho bạn để xác nhận đơn hàng trong thời gian sớm nhất.
+            </p>
+
+            <!-- Thông tin chính -->
+            <div class="order-main-info">
+                <h4>Đơn hàng: <strong>#@Model.MaDon</strong></h4>
+                <!--
+                    LƯU Ý:
+                    Các link "Quản lý" và "Hủy" cần logic backend (vd: trang tài khoản, API hủy đơn)
+                    mà model hiện tại không có. Đây chỉ là giao diện mẫu.
+                -->
+                <div class="order-links">
+                    <a href="#">Quản lý đơn hàng</a>
+                    <a href="#" class="text-danger">Hủy đơn</a>
+                </div>
+            </div>
+
+            <!-- Khung chi tiết -->
+            <!-- THAY ĐỔI 'div' THÀNH 'ul' TẠI ĐÂY -->
+            <ul class="order-details-list">
+                <li>
+                    <strong>Người nhận:</strong>
+                    <span class="value">@Model.HoTen</span>
+                </li>
+                <li>
+                    <strong>Số điện thoại:</strong>
+                    <span class="value">@Model.DienThoai</span>
+                </li>
+                <li>
+                    <strong>Địa chỉ giao hàng:</strong>
+                    <span class="value">@Model.DiaChi</span>
+                </li>
+                @if (!string.IsNullOrWhiteSpace(Model.GhiChu))
+                {
+                    <li>
+                        <strong>Ghi chú:</strong>
+                        <span class="value">@Model.GhiChu</span>
+                    </li>
+                }
+                <li>
+                    <strong>Phương thức:</strong>
+                    <span class="value">@Model.PhuongThucThanhToan</span>
+                </li>
+
+                <!-- THAY ĐỔI: Tóm tắt sản phẩm -->
+                <li>
+                    <strong>Sản phẩm đã đặt:</strong>
+                    <div class="value value-list">
+                        <!-- Thêm class value-list -->
+                        <ul class="order-products-list">
+                            @foreach (var d in Model.ChiTietDonHangs)
+                            {
+                                <li class="product-item">
+                                    <div class="product-image-wrapper">
+                                        <!-- Thêm hình ảnh -->
+                                        <img src="@Url.Content(string.IsNullOrWhiteSpace(d.SanPham?.HinhAnh) ? "~/imgs/no-image.png" : d.SanPham.HinhAnh)" alt="@d.SanPham?.Ten" />
+                                    </div>
+                                    <div class="product-info">
+                                        <!-- Thêm tên và số lượng -->
+                                        <span class="name">@((d.SanPham?.Ten) ?? $"SP#{d.SanPhamId}")</span>
+                                        <span class="quantity">Số lượng: @d.SoLuong</span>
+                                    </div>
+                                    <div class="price">
+                                        <!-- Thêm giá -->
+                                        @((d.DonGia * d.SoLuong).ToString("N0", vi))đ
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </li>
+                <!-- Kết thúc thay đổi -->
+                <!-- Tổng tiền -->
+                <li class="summary-total">
+                    <span class="total-label">Tổng tiền</span>
+                    <span class="total-value">@Model.TongTien.ToString("N0", vi)đ</span>
+                </li>
+            </ul> <!-- Thẻ </ul> này bây giờ đã hợp lệ -->
+            <!-- Trạng thái thanh toán (Dựa theo hình ảnh) -->
+            @if (isCOD)
+            {
+                <div class="status-box status-unpaid">
+                    Đơn hàng chưa được thanh toán (Thanh toán khi nhận hàng)
+                </div>
+            }
+            else
+            {
+                <div class="status-box status-paid">
+                    Đơn hàng đã được thanh toán
+                </div>
+            }
+
+            <!-- Nút Về trang chủ -->
+            <a asp-controller="Home" asp-action="Index" class="btn-back-home w-100 mt-4">
+                Về trang chủ
+            </a>
+        </div>
+    </div>
+</div>
