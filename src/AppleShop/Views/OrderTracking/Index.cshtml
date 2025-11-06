@@ -1,0 +1,220 @@
+﻿@model AppleShop.Models.ViewModels.OrderTrackingVM
+@{
+    ViewData["Title"] = "Tra cứu đơn hàng";
+}
+
+<style>
+    /* ===== Giao diện gọn, hiện đại ===== */
+    .wrap {
+        max-width: 880px;
+        margin: 28px auto;
+        padding: 0 12px;
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid #ececec;
+        border-radius: 16px;
+        box-shadow: 0 6px 18px rgba(0,0,0,.06);
+    }
+
+    .card-hd {
+        padding: 18px 20px;
+        border-bottom: 1px solid #f1f1f1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-tt {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .badge {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #f5f5f5;
+        color: #333;
+    }
+
+    .card-bd {
+        padding: 22px;
+    }
+
+    .input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        outline: none;
+    }
+
+        .input:focus {
+            border-color: #111;
+            box-shadow: 0 0 0 3px rgba(0,0,0,.08);
+        }
+
+    .btn {
+        padding: 12px 16px;
+        border: 0;
+        border-radius: 10px;
+        background: #111;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 600;
+        width: 100%;
+    }
+
+    .note {
+        font-size: 13px;
+        color: #666;
+        margin-top: 8px;
+        text-align: center;
+    }
+
+    .err {
+        background: #ffecec;
+        color: #a40000;
+        border: 1px solid #ffbdbd;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .meta {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    @@media (max-width:720px) {
+        .meta {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .tag {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #111;
+        color: #fff;
+        font-size: 12px;
+    }
+
+    .sep {
+        margin: 20px 0;
+        border: 0;
+        border-top: 1px dashed #eee;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 14px;
+    }
+
+        .table th, .table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+    .pcell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .pimg {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #eee;
+    }
+
+    .total {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+        font-weight: 700;
+    }
+</style>
+
+<div class="wrap">
+    <div class="card">
+        <div class="card-hd">
+            <div class="card-tt">Tra cứu đơn hàng</div>
+            <div class="badge">Nhập số điện thoại</div>
+        </div>
+
+        <div class="card-bd">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="err">
+                    @foreach (var e in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>@e.ErrorMessage</div>
+                    }
+                </div>
+            }
+
+            <!-- Form: chỉ cần SĐT -->
+            <form method="post" asp-action="Index" asp-controller="OrderTracking">
+                @Html.AntiForgeryToken()
+                <input class="input" name="PhoneOrEmail" placeholder="Nhập số điện thoại đã đặt hàng..." value="@Model?.PhoneOrEmail" />
+                <button class="btn" type="submit" style="margin-top:12px;">Tra cứu</button>
+                <div class="note">Hệ thống sẽ hiển thị <b>đơn mới nhất</b> theo số điện thoại bạn nhập.</div>
+            </form>
+
+            @if (Model != null && Model.DonHangId > 0)
+            {
+                <hr class="sep" />
+                <h3 style="margin:0 0 8px 0;">Kết quả tra cứu</h3>
+
+                <div class="meta">
+                    <div><b>Mã đơn:</b> @Model.MaDon</div>
+                    <div><b>Khách hàng:</b> @Model.TenKhach</div>
+                    <div><b>SĐT:</b> @Model.SoDienThoai</div>
+                    <div><b>Ngày đặt:</b> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
+                    <div style="grid-column:1/-1;"><b>Địa chỉ:</b> @Model.DiaChi</div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th style="width:90px;">SL</th>
+                            <th style="width:140px;">Đơn giá</th>
+                            <th style="width:160px;">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var it in Model.Items)
+                        {
+                            var img = string.IsNullOrEmpty(it.HinhAnh) ? Url.Content("~/imgs/no-image.png") : it.HinhAnh;
+                            <tr>
+                                <td>
+                                    <div class="pcell">
+                                        <img class="pimg" src="@img" alt="@it.TenSanPham" />
+                                        <div>@it.TenSanPham</div>
+                                    </div>
+                                </td>
+                                <td>@it.SoLuong</td>
+                                <td>@it.DonGia.ToString("#,0") ₫</td>
+                                <td>@it.ThanhTien.ToString("#,0") ₫</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="total">Tổng cộng: @Model.TongTien.ToString("#,0") ₫</div>
+                <div class="note">Cần hỗ trợ? Gọi tổng đài: <b>1900 9698 42</b> (8:00 – 21:30).</div>
+            }
+        </div>
+    </div>
+</div>
