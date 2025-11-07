@@ -1,0 +1,118 @@
+﻿:root {
+    --aside: #0f172a;
+    --aside-text: #cbd5e1;
+    --brand: #fff;
+    --hover: #1e293b;
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    background: #f5f7fb
+}
+
+.admin {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh
+}
+
+.admin-aside {
+    background: var(--aside);
+    color: var(--aside-text);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--brand);
+    font-weight: 700
+}
+
+    .brand img {
+        height: 28px
+    }
+
+.menu-head {
+    margin-top: 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    padding: 8px 6px
+}
+
+.menu-item {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: var(--aside-text);
+    text-decoration: none
+}
+
+    .menu-item:hover, .menu-item.active {
+        background: var(--hover);
+        color: #fff
+    }
+
+.logout {
+    margin-top: auto
+}
+
+.admin-main {
+    display: flex;
+    flex-direction: column
+}
+
+.admin-topbar {
+    background: #fff;
+    border-bottom: 1px solid #eef1f6;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+
+    .admin-topbar .title {
+        font-weight: 700
+    }
+
+.admin-content {
+    padding: 18px
+}
+
+.card-soft {
+    border: 0;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.05)
+}
+
+.table thead th {
+    white-space: nowrap
+}
+
+.table td, .table th {
+    vertical-align: middle
+}
+
+.badge-soft {
+    background: #eef2ff;
+    color: #4f46e5
+}
+
+@media (max-width: 992px) {
+    .admin {
+        grid-template-columns: 1fr
+    }
+
+    .admin-aside {
+        position: fixed;
+        left: -260px
+    }
+}

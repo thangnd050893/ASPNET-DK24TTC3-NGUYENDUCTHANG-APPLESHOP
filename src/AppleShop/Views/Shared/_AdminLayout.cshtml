@@ -1,0 +1,48 @@
+﻿@{
+    Layout = null;
+    var title = ViewData["Title"] as string ?? "Bảng điều khiển";
+}
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title - Admin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="admin">
+        <aside class="admin-aside">
+            <div class="brand">
+                <img src="~/imgs/logo.jpg" alt="brand" />
+                <span>AppleShop THẮNG</span>
+            </div>
+            <nav class="menu">
+                <a asp-controller="Admin" asp-action="Index" class="menu-item">Bảng điều khiển</a>
+                <div class="menu-head">Quản lý</div>
+                <a asp-controller="OrdersAdmin" asp-action="Index" class="menu-item">Đơn hàng</a>
+                <a asp-controller="ProductsAdmin" asp-action="Index" class="menu-item">Sản phẩm</a>
+                <a asp-controller="DanhMucAdmin" asp-action="Index" class="menu-item">Danh mục</a>
+            </nav>
+            <form asp-controller="Account" asp-action="Logout" method="post" class="logout">
+                <button class="btn btn-outline-danger w-100">Đăng xuất</button>
+            </form>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-topbar">
+                <div class="title">@title</div>
+                <div class="right">
+                    <span class="me-3 text-muted small">Xin chào, @User.FindFirst("HoTen")?.Value ?? User.Identity?.Name</span>
+                </div>
+            </header>
+            <section class="admin-content">
+                @RenderBody()
+            </section>
+        </main>
+    </div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

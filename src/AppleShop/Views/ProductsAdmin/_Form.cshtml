@@ -1,0 +1,80 @@
+﻿@model AppleShop.Models.SanPham
+@{
+    var isEdit = Model?.SanPhamId > 0;
+    var action = isEdit ? $"/admin/products/edit/{Model.SanPhamId}" : "/admin/products/create";
+    var cats = (IEnumerable<AppleShop.Models.DanhMuc>)ViewBag.Cats ?? Enumerable.Empty<AppleShop.Models.DanhMuc>();
+}
+
+<div class="card card-soft">
+    <div class="card-body">
+        <form method="post" action="@action">
+            @Html.AntiForgeryToken()
+
+            <!-- Hiển thị lỗi ModelState -->
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            @* Hidden ID khi edit *@
+            @if (isEdit)
+            {
+                <input type="hidden" asp-for="SanPhamId" />
+            }
+
+            <div class="row g-3">
+                <!-- Tên sản phẩm -->
+                <div class="col-md-8">
+                    <label class="form-label">Tên sản phẩm</label>
+                    <input asp-for="Ten" class="form-control" required />
+                    <span class="text-danger" asp-validation-for="Ten"></span>
+                </div>
+
+                <!-- Danh mục -->
+                <div class="col-md-4">
+                    <label class="form-label">Danh mục</label>
+                    <select asp-for="DanhMucId" class="form-select" required>
+                        <option value="">-- Chọn danh mục --</option>
+                        @foreach (var c in cats)
+                        {
+                            <option value="@c.DanhMucId" selected="@((Model?.DanhMucId ?? 0) == c.DanhMucId)">
+                                @c.Ten
+                            </option>
+                        }
+                    </select>
+                    <span class="text-danger" asp-validation-for="DanhMucId"></span>
+                </div>
+
+                <!-- Giá bán -->
+                <div class="col-md-4">
+                    <label class="form-label">Giá bán</label>
+                    <input asp-for="GiaBan" type="number" step="1000" min="0" class="form-control" required />
+                    <span class="text-danger" asp-validation-for="GiaBan"></span>
+                </div>
+
+                <!-- Ảnh sản phẩm -->
+                <div class="col-md-8">
+                    <label class="form-label">Ảnh (URL)</label>
+                    <input asp-for="HinhAnh" class="form-control" placeholder="/imgs/iphone17.jpg" />
+                    <span class="text-danger" asp-validation-for="HinhAnh"></span>
+                </div>
+
+                <!-- Mô tả -->
+                <div class="col-12">
+                    <label class="form-label">Mô tả</label>
+                    <textarea asp-for="MoTa" class="form-control" rows="4"></textarea>
+                    <span class="text-danger" asp-validation-for="MoTa"></span>
+                </div>
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-primary">
+                    @(isEdit ? "Lưu thay đổi" : "Thêm sản phẩm")
+                </button>
+                <a href="/admin/products" class="btn btn-outline-secondary">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

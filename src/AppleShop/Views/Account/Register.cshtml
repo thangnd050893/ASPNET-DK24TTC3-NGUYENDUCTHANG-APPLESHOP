@@ -1,0 +1,78 @@
+﻿@model AppleShop.Models.ViewModels.RegisterVM
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Tạo tài khoản quản trị";
+}
+
+<div class="auth-card">
+    <div class="row g-0">
+        <!-- Cột trái: logo + mô tả + hình minh họa -->
+        <div class="col-md-6 auth-left text-center">
+            <img src="~/imgs/logo.jpg" class="auth-brand" alt="AppleThắng" />
+            <h5 class="mt-1">Quản trị sản phẩm, đơn hàng, danh mục… tại AppleShop</h5>
+            <img src="~/imgs/inet-all-products.jpg" class="auth-illus" alt="Login Illustration" />
+        </div>
+
+        <!-- Cột phải: form -->
+        <div class="col-md-6 auth-right">
+            <h5 class="mb-3">Đăng ký</h5>
+
+            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+            {
+                <div class="alert alert-danger">Vui lòng kiểm tra lại các trường bên dưới.</div>
+            }
+
+            <form asp-action="Register" method="post" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label">Tên đăng nhập</label>
+                    <input asp-for="UserName" class="form-control" autocomplete="username" required />
+                    <span class="text-danger small" asp-validation-for="UserName"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Họ tên</label>
+                    <input asp-for="FullName" class="form-control" autocomplete="name" />
+                    <span class="text-danger small" asp-validation-for="FullName"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu</label>
+                    <div class="input-group">
+                        <input asp-for="Password" type="password" id="pwd" class="form-control" autocomplete="new-password" required />
+                        <span class="input-group-text auth-eye" id="togglePwd">👁</span>
+                    </div>
+                    <span class="text-danger small" asp-validation-for="Password"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Xác nhận mật khẩu</label>
+                    <div class="input-group">
+                        <input asp-for="ConfirmPassword" type="password" id="pwd2" class="form-control" autocomplete="new-password" required />
+                        <span class="input-group-text auth-eye" id="togglePwd2">👁</span>
+                    </div>
+                    <span class="text-danger small" asp-validation-for="ConfirmPassword"></span>
+                </div>
+
+                <button class="btn btn-primary w-100">Đăng ký</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <a href="/account/login" class="small text-decoration-none">Đã có tài khoản? Đăng nhập</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const ipt1 = document.getElementById('pwd');
+        const btn1 = document.getElementById('togglePwd');
+        const ipt2 = document.getElementById('pwd2');
+        const btn2 = document.getElementById('togglePwd2');
+        if (btn1 && ipt1) btn1.onclick = () => ipt1.type = (ipt1.type === 'password' ? 'text' : 'password');
+        if (btn2 && ipt2) btn2.onclick = () => ipt2.type = (ipt2.type === 'password' ? 'text' : 'password');
+    </script>
+}

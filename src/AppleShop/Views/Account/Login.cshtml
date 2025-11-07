@@ -1,0 +1,74 @@
+﻿@model AppleShop.Models.ViewModels.LoginVM
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<div class="auth-card">
+    <div class="row g-0">
+        <!-- Cột trái: logo + mô tả + hình minh họa -->
+        <div class="col-md-6 auth-left text-center">
+            <img src="~/imgs/logo.jpg" class="auth-brand" alt="AppleThắng" />
+            <h5 class="mt-1">Quản trị sản phẩm, đơn hàng, danh mục… tại AppleShop</h5>
+            <img src="~/imgs/inet-all-products.jpg" class="auth-illus" alt="Login Illustration" />
+        </div>
+
+        <!-- Cột phải: form -->
+        <div class="col-md-6 auth-right">
+            <h5 class="mb-3">Đăng nhập</h5>
+
+            @if (TempData["msg"] != null)
+            {
+                <div class="alert alert-success">@TempData["msg"]</div>
+            }
+
+            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+            {
+                <div class="alert alert-danger">Sai tài khoản hoặc mật khẩu.</div>
+            }
+
+            <form asp-action="Login" method="post" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label">Tên đăng nhập</label>
+                    <input asp-for="UserName" class="form-control" autocomplete="username" required />
+                    <span class="text-danger small" asp-validation-for="UserName"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu</label>
+                    <div class="input-group">
+                        <input asp-for="Password" type="password" id="pwd" class="form-control" autocomplete="current-password" required />
+                        <span class="input-group-text auth-eye" id="togglePwd">👁</span>
+                    </div>
+                    <span class="text-danger small" asp-validation-for="Password"></span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="form-check">
+                        <input asp-for="Remember" class="form-check-input" id="rememberMe" />
+                        <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
+                    </div>
+                    <a asp-controller="Home" asp-action="Index" class="small text-decoration-none">Về trang chủ</a>
+                </div>
+
+                <button class="btn btn-primary w-100">Đăng nhập</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <a asp-action="Register" class="small text-decoration-none">Chưa có tài khoản? Đăng ký</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // hiện/ẩn mật khẩu
+        const ipt = document.getElementById('pwd');
+        const btn = document.getElementById('togglePwd');
+        if (ipt && btn) btn.onclick = () => ipt.type = (ipt.type === 'password' ? 'text' : 'password');
+    </script>
+}

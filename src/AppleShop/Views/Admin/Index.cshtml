@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "_AdminLayout"; ViewData["Title"] = "Tiêu đề trang";
+}
+
+<div class="container py-4">
+    <h3 class="mb-3">Xin chào @User.Identity?.Name!</h3>
+    <div class="list-group mb-3">
+        <a class="list-group-item list-group-item-action" asp-controller="SanPham" asp-action="Index">Quản lý Sản phẩm</a>
+        <a class="list-group-item list-group-item-action" asp-controller="DonHang" asp-action="Index">Quản lý Đơn hàng</a>
+        <a class="list-group-item list-group-item-action" asp-controller="DanhMuc" asp-action="Index">Quản lý Danh mục</a>
+    </div>
+</div>

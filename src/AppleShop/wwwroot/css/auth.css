@@ -1,0 +1,65 @@
+﻿/* Nền gradient nhẹ */
+.auth-bg {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #f6f7fb 0%, #e9ecf3 60%, #dde2eb 100%);
+}
+/* Căn giữa card */
+.auth-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+/* Card 2 cột: trái hình minh họa, phải form */
+.auth-card {
+    width: min(920px, 100%);
+    border: 0;
+    border-radius: 18px;
+    box-shadow: 0 12px 32px rgba(0,0,0,.08);
+    overflow: hidden;
+    background: #fff;
+}
+
+.auth-left {
+    background: #fff;
+    padding: 28px;
+    border-right: 1px solid #f1f1f1;
+}
+
+.auth-illus {
+    width: 100%;
+    max-width: 200px;
+    display: block;
+    margin: 10px auto 0 auto;
+}
+
+.auth-right {
+    padding: 28px;
+}
+
+.auth-brand {
+    height: 34px;
+    object-fit: contain;
+    margin-bottom: 8px;
+}
+
+.auth-muted {
+    color: #6c757d;
+}
+
+.auth-eye {
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Mobile: xếp dọc */
+@media (max-width: 768px) {
+    .auth-left {
+        display: none;
+    }
+
+    .auth-right {
+        padding: 22px;
+    }
+}

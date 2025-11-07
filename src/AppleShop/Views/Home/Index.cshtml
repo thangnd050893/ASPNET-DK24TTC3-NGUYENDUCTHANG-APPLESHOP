@@ -3,185 +3,165 @@
 }
 @model AppleShop.Models.ViewModels.HomeIndexVM
 @using System.Globalization
-<body>
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Hero Banner Slider -->
-        <!-- Hero Banner Slider -->
-        <div class="hero-slider">
-            <div class="slider-wrapper" id="slider">
-                <!-- Slide 1 -->
-                <div class="slide">
-                    <img src="~/imgs/hero/sider2.jpg" alt="sider2" style="width:100%; border-radius:20px;" />
-                </div>
 
-                <!-- Slide 2 -->
-                <div class="slide">
-                    <img src="~/imgs/hero/sider1.jpg" alt="sider1" style="width:100%; border-radius:20px;" />
-                </div>
-
-                <!-- Slide 3 -->
-                <div class="slide">
-                    <img src="~/imgs/hero/sider3.jpg" alt="sider3" style="width:100%; border-radius:20px;" />
-                </div>
+<div class="container">
+    <div class="hero-slider">
+        <div class="slider-wrapper" id="slider">
+            <div class="slide">
+                <img src="~/imgs/hero/sider2.jpg" alt="sider2" style="width:100%; border-radius:20px;" />
             </div>
 
-            <!-- Nút điều hướng trái/phải -->
-            <button class="slider-btn prev" onclick="prevSlide()">
-                <i class="bi bi-chevron-left"></i>
-            </button>
-            <button class="slider-btn next" onclick="nextSlide()">
-                <i class="bi bi-chevron-right"></i>
-            </button>
+            <div class="slide">
+                <img src="~/imgs/hero/sider1.jpg" alt="sider1" style="width:100%; border-radius:20px;" />
+            </div>
 
-            <!-- Dấu chấm chỉ slide -->
-            <div class="slider-dots">
-                <span class="dot active" onclick="currentSlide(0)"></span>
-                <span class="dot" onclick="currentSlide(1)"></span>
-                <span class="dot" onclick="currentSlide(2)"></span>
+            <div class="slide">
+                <img src="~/imgs/hero/sider3.jpg" alt="sider3" style="width:100%; border-radius:20px;" />
             </div>
         </div>
 
+        <button class="slider-btn prev" onclick="prevSlide()">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+        <button class="slider-btn next" onclick="nextSlide()">
+            <i class="bi bi-chevron-right"></i>
+        </button>
 
-        <!-- Category Section -->
-        <div class="category-section">
-            <div class="section-title">
-                <h2>Danh mục sản phẩm</h2>
-            </div>
-            <div class="category-grid">
-                <a asp-controller="Products" asp-action="Category" asp-route-id="1" class="category-card">
-                    <div class="category-icon"> <img src="~/imgs/icons/IP_Desk_25.png" alt="iPhone" /></div>
-                    <h3>iPhone</h3>
-                </a>
-                <a asp-controller="Products" asp-action="Category" asp-route-id="3" class="category-card">
-                    <div class="category-icon"> <img src="~/imgs/icons/Mac_Desk_25.png" alt="iPhone" /></div>
-                    <h3>Mac</h3>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"> <img src="~/imgs/icons/Watch_Desk.png" alt="iPhone" /></div>
-                    <h3>Apple Watch</h3>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"> <img src="~/imgs/icons/Speaker_Desk_25.png" alt="iPhone" /></div>
-                    <h3>AirPods</h3>
-                </a>
-                <a asp-controller="Products" asp-action="Category" asp-route-id="2" class="category-card">
-                    <div class="category-icon"> <img src="~/imgs/icons/Ipad_Desk_25.png" alt="iPhone" /></div>
-                    <h3>iPad</h3>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"> <img src="~/imgs/icons/Phukien_Desk_25.png" alt="iPhone" /></div>
-                    <h3>Phụ kiện</h3>
-                </a>
-            </div>
+        <div class="slider-dots">
+            <span class="dot active" onclick="currentSlide(0)"></span>
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
         </div>
-<!-- Hot Products Section -->
-<div class="section-title">
-    <h2><i class="bi bi-apple"></i> iPhone</h2>
-    <a asp-controller="Products" asp-action="Category" asp-route-id="1" class="view-all">Xem tất cả →</a>
-</div>
-
-<div class="product-grid">
-@foreach (var p in Model.Iphones)
-{
-    <a asp-controller="Products" asp-action="Detail" asp-route-id="@p.Id" class="product-card">
-        <span class="product-badge">HOT</span>
-
-        <img src="@Url.Content(string.IsNullOrWhiteSpace(p.HinhAnh) ? "~/imgs/no-image.png" : p.HinhAnh)"
-             alt="@p.Ten" class="product-image" />
-
-        <h3 class="product-name">@p.Ten</h3>
-
-        <div class="product-price">
-            <span class="current-price">
-                @string.Format(new CultureInfo("vi-VN"), "{0:N0}₫", p.GiaBan)
-            </span>
-        </div>
-
-        
-
-        <div class="product-features">
-            <span class="feature-tag">New</span>
-        </div>
-    </a>
-}
-</div>
-
-        <!-- Promotion Banner -->
-        <div class="promo-banner">
-            <h2>Ưu đãi độc quyền - Giảm đến 10%</h2>
-            <p>Áp dụng cho tất cả sản phẩm Apple chính hãng</p>
-            <a href="#" class="btn-shop">Xem ưu đãi</a>
-        </div>
-
-        <!-- New Products Section -->
-        <!-- Mac Section -->
-        <div class="section-title">
-            <h2><i class="bi bi-laptop"></i> MacBook</h2>
-            <a asp-controller="Products" asp-action="Category" asp-route-id="3" class="view-all">Xem tất cả →</a>
-        </div>
-
-        <div class="product-grid">
-            @foreach (var p in Model.Macbooks)
-            {
-                <a asp-controller="Products" asp-action="Detail" asp-route-id="@p.Id" class="product-card">
-                    <span class="product-badge">HOT</span>
-
-                    <img src="@Url.Content(string.IsNullOrWhiteSpace(p.HinhAnh) ? "~/imgs/no-image.png" : p.HinhAnh)"
-                         alt="@p.Ten"
-                         class="product-image" />
-
-                    <h3 class="product-name">@p.Ten</h3>
-
-                    <div class="product-price">
-                        <span class="current-price">@p.GiaBan.ToString("N0", new System.Globalization.CultureInfo("vi-VN"))₫</span>
-                    </div>
-
-                    <p class="product-installment">
-                        Trả góp 0% - @(Math.Ceiling(p.GiaBan / 12).ToString("N0", new System.Globalization.CultureInfo("vi-VN")))₫/tháng
-                    </p>
-
-                    <div class="product-features">
-                        <span class="feature-tag">New</span>
-                    </div>
-                </a>
-            }
-        </div>
-
-        <!-- iPad Section -->
-        <div class="section-title">
-            <h2><i class="bi bi-tablet"></i> iPad</h2>
-            <a asp-controller="Products" asp-action="Category" asp-route-id="2" class="view-all">Xem tất cả →</a>
-        </div>
-
-        <div class="product-grid">
-            @foreach (var p in Model.Ipads)
-            {
-                <a asp-controller="Products" asp-action="Detail" asp-route-id="@p.Id" class="product-card">
-                    <span class="product-badge">HOT</span>
-
-                    <img src="@Url.Content(string.IsNullOrWhiteSpace(p.HinhAnh) ? "~/imgs/no-image.png" : p.HinhAnh)"
-                         alt="@p.Ten" class="product-image" />
-
-                    <h3 class="product-name">@p.Ten</h3>
-
-                    <div class="product-price">
-                        <span class="current-price">@p.GiaBan.ToString("N0", new System.Globalization.CultureInfo("vi-VN"))₫</span>
-                    </div>
-
-                    <p class="product-installment">
-                        Trả góp 0% - @(Math.Ceiling(p.GiaBan / 12).ToString("N0", new System.Globalization.CultureInfo("vi-VN")))₫/tháng
-                    </p>
-
-                    <div class="product-features">
-                        <span class="feature-tag">New</span>
-                    </div>
-                </a>
-            }
-        </div>
-
     </div>
 
-   
-</body>
-</html>
+
+    <div class="category-section">
+        <div class="section-title">
+            <h2>Danh mục sản phẩm</h2>
+        </div>
+        <div class="category-grid">
+            <a asp-controller="Products" asp-action="Category" asp-route-id="1" class="category-card">
+                <div class="category-icon"> <img src="~/imgs/icons/IP_Desk_25.png" alt="iPhone" /></div>
+                <h3>iPhone</h3>
+            </a>
+            <a asp-controller="Products" asp-action="Category" asp-route-id="3" class="category-card">
+                <div class="category-icon"> <img src="~/imgs/icons/Mac_Desk_25.png" alt="iPhone" /></div>
+                <h3>Mac</h3>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon"> <img src="~/imgs/icons/Watch_Desk.png" alt="iPhone" /></div>
+                <h3>Apple Watch</h3>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon"> <img src="~/imgs/icons/Speaker_Desk_25.png" alt="iPhone" /></div>
+                <h3>AirPods</h3>
+            </a>
+            <a asp-controller="Products" asp-action="Category" asp-route-id="2" class="category-card">
+                <div class="category-icon"> <img src="~/imgs/icons/Ipad_Desk_25.png" alt="iPhone" /></div>
+                <h3>iPad</h3>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon"> <img src="~/imgs/icons/Phukien_Desk_25.png" alt="iPhone" /></div>
+                <h3>Phụ kiện</h3>
+            </a>
+        </div>
+    </div>
+    <div class="section-title">
+        <h2><i class="bi bi-apple"></i> iPhone</h2>
+        <a asp-controller="Products" asp-action="Category" asp-route-id="1" class="view-all">Xem tất cả →</a>
+    </div>
+
+    <div class="product-grid">
+        @foreach (var p in Model.Iphones)
+        {
+            <a asp-controller="Products" asp-action="Detail" asp-route-id="@p.Id" class="product-card">
+                <span class="product-badge">HOT</span>
+
+                <img src="@Url.Content(string.IsNullOrWhiteSpace(p.HinhAnh) ? "~/imgs/no-image.png" : p.HinhAnh)"
+                     alt="@p.Ten" class="product-image" />
+
+                <h3 class="product-name">@p.Ten</h3>
+
+                <div class="product-price">
+                    <span class="current-price">
+                        @string.Format(new CultureInfo("vi-VN"), "{0:N0}₫", p.GiaBan)
+                    </span>
+                </div>
+
+                <div class="product-features">
+                    <span class="feature-tag">New</span>
+                </div>
+            </a>
+        }
+    </div>
+
+    <div class="promo-banner">
+        <h2>Ưu đãi độc quyền - Giảm đến 10%</h2>
+        <p>Áp dụng cho tất cả sản phẩm Apple chính hãng</p>
+        <a href="#" class="btn-shop">Xem ưu đãi</a>
+    </div>
+
+    <div class="section-title">
+        <h2><i class="bi bi-laptop"></i> MacBook</h2>
+        <a asp-controller="Products" asp-action="Category" asp-route-id="3" class="view-all">Xem tất cả →</a>
+    </div>
+
+    <div class="product-grid">
+        @foreach (var p in Model.Macbooks)
+        {
+            <a asp-controller="Products" asp-action="Detail" asp-route-id="@p.Id" class="product-card">
+                <span class="product-badge">HOT</span>
+
+                <img src="@Url.Content(string.IsNullOrWhiteSpace(p.HinhAnh) ? "~/imgs/no-image.png" : p.HinhAnh)"
+                     alt="@p.Ten"
+                     class="product-image" />
+
+                <h3 class="product-name">@p.Ten</h3>
+
+                <div class="product-price">
+                    <span class="current-price">@p.GiaBan.ToString("N0", new System.Globalization.CultureInfo("vi-VN"))₫</span>
+                </div>
+
+                <p class="product-installment">
+                    Trả góp 0% - @(Math.Ceiling(p.GiaBan / 12).ToString("N0", new System.Globalization.CultureInfo("vi-VN")))₫/tháng
+                </p>
+
+                <div class="product-features">
+                    <span class="feature-tag">New</span>
+                </div>
+            </a>
+        }
+    </div>
+
+    <div class="section-title">
+        <h2><i class="bi bi-tablet"></i> iPad</h2>
+        <a asp-controller="Products" asp-action="Category" asp-route-id="2" class="view-all">Xem tất cả →</a>
+    </div>
+
+    <div class="product-grid">
+        @foreach (var p in Model.Ipads)
+        {
+            <a asp-controller="Products" asp-action="Detail" asp-route-id="@p.Id" class="product-card">
+                <span class="product-badge">HOT</span>
+
+                <img src="@Url.Content(string.IsNullOrWhiteSpace(p.HinhAnh) ? "~/imgs/no-image.png" : p.HinhAnh)"
+                     alt="@p.Ten" class="product-image" />
+
+                <h3 class="product-name">@p.Ten</h3>
+
+                <div class="product-price">
+                    <span class="current-price">@p.GiaBan.ToString("N0", new System.Globalization.CultureInfo("vi-VN"))₫</span>
+                </div>
+
+                <p class="product-installment">
+                    Trả góp 0% - @(Math.Ceiling(p.GiaBan / 12).ToString("N0", new System.Globalization.CultureInfo("vi-VN")))₫/tháng
+                </p>
+
+                <div class="product-features">
+                    <span class="feature-tag">New</span>
+                </div>
+            </a>
+        }
+    </div>
+
+</div>
