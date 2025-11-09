@@ -1,0 +1,35 @@
+﻿@model AppleShop.Models.DanhMuc
+@{
+    ViewData["Title"] = "Sửa danh mục";
+}
+<h2>Sửa danh mục</h2>
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <input asp-for="DanhMucId" type="hidden" />
+
+    <div class="mb-3">
+        <label class="form-label">Tên</label>
+        <input asp-for="Ten" class="form-control" />
+        <span asp-validation-for="Ten" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Danh mục cha</label>
+        <select asp-for="DanhMucChaId" asp-items="ViewBag.ListChaSelect" class="form-select">
+            <option value="">-- Không có --</option>
+        </select>
+        <span asp-validation-for="DanhMucChaId" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary">Cập nhật</button>
+    <a href="/admin/categories" class="btn btn-secondary">Hủy</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}

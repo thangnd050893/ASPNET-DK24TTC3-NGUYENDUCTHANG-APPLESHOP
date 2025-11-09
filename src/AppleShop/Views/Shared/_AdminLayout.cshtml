@@ -10,6 +10,9 @@
     <title>@title - Admin</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+
 </head>
 <body>
     <div class="admin">
@@ -19,11 +22,25 @@
                 <span>AppleShop THẮNG</span>
             </div>
             <nav class="menu">
-                <a asp-controller="Admin" asp-action="Index" class="menu-item">Bảng điều khiển</a>
-                <div class="menu-head">Quản lý</div>
-                <a asp-controller="OrdersAdmin" asp-action="Index" class="menu-item">Đơn hàng</a>
-                <a asp-controller="ProductsAdmin" asp-action="Index" class="menu-item">Sản phẩm</a>
-                <a asp-controller="DanhMucAdmin" asp-action="Index" class="menu-item">Danh mục</a>
+                <a asp-controller="Admin" asp-action="Index" class="menu-item">
+                    <i class="fa-solid fa-tachometer-alt fa-fw"></i> TỔNG QUAN
+                </a>
+
+                <div class="menu-head">
+                    <i class="fa-solid fa-cogs fa-fw"></i> Quản lý
+                </div>
+
+                <a asp-controller="OrdersAdmin" asp-action="Index" class="menu-item">
+                    <i class="fa-solid fa-shopping-cart fa-fw"></i> Đơn hàng
+                </a>
+
+                <a asp-controller="ProductsAdmin" asp-action="Index" class="menu-item">
+                    <i class="fa-solid fa-box fa-fw"></i> Sản phẩm
+                </a>
+
+                <a asp-controller="CategoriesAdmin" asp-action="Index" class="menu-item">
+                    <i class="fa-solid fa-sitemap fa-fw"></i> Danh mục
+                </a>
             </nav>
             <form asp-controller="Account" asp-action="Logout" method="post" class="logout">
                 <button class="btn btn-outline-danger w-100">Đăng xuất</button>

@@ -1,0 +1,93 @@
+﻿@model IEnumerable<AppleShop.Models.DonHang>
+@{
+    ViewData["Title"] = "Đơn hàng";
+    string q = (string)(ViewBag.Q ?? "");
+    int? status = (int?)ViewBag.Status;
+    int total = (int)(ViewBag.Total ?? 0);
+    int page = (int)(ViewBag.Page ?? 1);
+    int pageSize = (int)(ViewBag.PageSize ?? 12);
+    int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+
+    string StatusText(int s) => s switch { 0=>"Nháp",1=>"Mới",2=>"Đang giao",3=>"Hoàn tất",4=>"Hủy", _=>"?" };
+
+}
+
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Đơn hàng</h5>
+        <div class="d-flex gap-2">
+            <form method="get" class="d-flex gap-2">
+                <input name="q" value="@q" class="form-control" placeholder="Mã đơn / Họ tên / SĐT" />
+                <select name="status" class="form-select">
+                    <option value="">-- Trạng thái --</option>
+                    @for (int i = 0; i <= 4; i++)
+                    {
+                        <option value="@i" selected="@(status == i ? "selected" : null)">@StatusText(i)</option>
+                    }
+                </select>
+                <button class="btn btn-primary">Lọc</button>
+            </form>
+            <a class="btn btn-success" href="/admin/orders/create">+ Tạo đơn</a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        @if (TempData["ok"] != null)
+        {
+            <div class="alert alert-success">@TempData["ok"]</div>
+        }
+
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:80px;">ID</th>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>SĐT</th>
+                        <th>Trạng thái</th>
+                        <th>Tổng</th>
+                        <th>Ngày tạo</th>
+                        <th class="text-end" style="width:220px;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var x in Model)
+                    {
+                        <tr>
+                            <td>@x.DonHangId</td>
+                            <td>@x.MaDon</td>
+                            <td>@x.HoTen</td>
+                            <td>@x.DienThoai</td>
+                            <td>@StatusText(x.TrangThai)</td>
+                            <td>@x.TongTien.ToString("n0")</td> @* tránh ?? với decimal không-nullable *@
+                            <td>@x.NgayTao.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-info" href="/admin/orders/details/@x.DonHangId">Xem</a>
+                                <a class="btn btn-sm btn-warning" href="/admin/orders/edit/@x.DonHangId">Sửa</a>
+                                <form method="post" action="/admin/orders/delete/@x.DonHangId" style="display:inline" onsubmit="return confirm('Xóa đơn này?');">
+                                    @Html.AntiForgeryToken()
+                                    <button class="btn btn-sm btn-danger">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (totalPages > 1)
+        {
+            <nav class="mt-3">
+                <ul class="pagination">
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == page ? "active" : "")">
+                            <a class="page-link" href="?q=@q&status=@status&page=@i">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>
+</div>

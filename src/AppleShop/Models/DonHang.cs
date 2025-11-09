@@ -29,6 +29,7 @@ namespace AppleShop.Models
 
         // Tổng tiền
         public decimal TongTien { get; set; }
+         public int TrangThai { get; set; } = 1; // 0 Nháp, 1 Mới, 2 Đang giao, 3 Hoàn tất, 4 Hủy
 
         // Nếu DB của bạn là NgayDat thì đổi lại tên property cho khớp:
         // public DateTime NgayDat { get; set; } = DateTime.Now;

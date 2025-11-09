@@ -1,0 +1,44 @@
+﻿@model IEnumerable<AppleShop.Models.DanhMuc>
+@{
+    ViewData["Title"] = "Danh mục";
+}
+<h2>Danh mục</h2>
+
+@if (TempData["ok"] != null)
+{
+    <div class="alert alert-success">@TempData["ok"]</div>
+}
+@if (TempData["err"] != null)
+{
+    <div class="alert alert-danger">@TempData["err"]</div>
+}
+
+<a href="/admin/categories/create" class="btn btn-success mb-3">+ Thêm danh mục</a>
+
+<table class="table table-bordered align-middle">
+    <thead>
+        <tr>
+            <th style="width:80px;">ID</th>
+            <th>Tên</th>
+            <th>Danh mục cha</th>
+            <th style="width:180px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var x in Model)
+        {
+            <tr>
+                <td>@x.DanhMucId</td>
+                <td>@x.Ten</td>
+                <td>@x.DanhMucCha?.Ten</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" href="/admin/categories/edit/@x.DanhMucId">Sửa</a>
+                    <form method="post" action="/admin/categories/delete/@x.DanhMucId" style="display:inline" onsubmit="return confirm('Xóa danh mục này?');">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-sm btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
