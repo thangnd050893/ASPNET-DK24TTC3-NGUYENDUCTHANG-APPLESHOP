@@ -41,6 +41,10 @@
                 <a asp-controller="CategoriesAdmin" asp-action="Index" class="menu-item">
                     <i class="fa-solid fa-sitemap fa-fw"></i> Danh mục
                 </a>
+                <a asp-controller="DashboardAdmin" asp-action="Index" class="menu-item">
+                    <i class="fa-solid fa-chart-line fa-fw"></i> Báo Cáo Thống Kê
+                </a>
+
             </nav>
             <form asp-controller="Account" asp-action="Logout" method="post" class="logout">
                 <button class="btn btn-outline-danger w-100">Đăng xuất</button>
@@ -51,7 +55,10 @@
             <header class="admin-topbar">
                 <div class="title">@title</div>
                 <div class="right">
-                    <span class="me-3 text-muted small">Xin chào, @User.FindFirst("HoTen")?.Value ?? User.Identity?.Name</span>
+                    <span class="me-3 text-muted small">
+                        Xin chào, @(User?.FindFirst("HoTen")?.Value ?? User?.Identity?.Name ?? "Admin Nguyễn Đức Thắng")
+                    </span>
+
                 </div>
             </header>
             <section class="admin-content">

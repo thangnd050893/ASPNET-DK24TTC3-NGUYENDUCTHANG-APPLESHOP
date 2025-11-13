@@ -1,0 +1,309 @@
+﻿@model AppleShop.Controllers.OrderDetailVM
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+    string VND(decimal v) => string.Format("{0:#,0}", v);
+    string StatusBadge(int st) => st switch
+    {
+        1 => "<span class='badge bg-secondary-subtle text-secondary-emphasis'>Mới</span>",
+        2 => "<span class='badge bg-info-subtle text-info-emphasis'>Đang giao</span>",
+        3 => "<span class='badge bg-success-subtle text-success-emphasis'>Hoàn tất</span>",
+        4 => "<span class='badge bg-danger-subtle text-danger-emphasis'>Hủy</span>",
+        _ => "<span class='badge bg-light text-dark'>Không rõ</span>"
+    };
+}
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Nền xám nhạt */
+    }
+
+    .card {
+        border-radius: 14px;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,.05);
+    }
+
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+        padding: 1rem 1.25rem;
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    .table > :not(caption) > * > * {
+        vertical-align: middle;
+    }
+
+    .order-meta {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+        /* Cập nhật "chip" cho hiện đại hơn */
+        .order-meta .chip {
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: #e9ecef;
+            font-size: .9rem;
+            font-weight: 500;
+            color: #495057;
+        }
+
+    .order-actions .btn {
+        border-radius: 10px;
+    }
+
+    .thumb {
+        width: 52px;
+        height: 52px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid #eee;
+    }
+
+    .section-title {
+        font-weight: 600;
+        font-size: 1.05rem;
+        color: #212529;
+    }
+
+    /* Danh sách thông tin người nhận */
+    .info-list {
+        padding-left: 0;
+        list-style: none;
+        margin-bottom: 0;
+    }
+
+        .info-list li {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+            .info-list li:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .info-list li:first-child {
+                padding-top: 0;
+            }
+
+        .info-list .info-icon {
+            font-size: 1.1rem;
+            color: #555;
+            width: 20px;
+            text-align: center;
+        }
+
+        .info-list .info-text {
+            flex: 1;
+            font-weight: 500;
+        }
+
+            .info-list .info-text .text-muted {
+                font-weight: 400;
+                display: block;
+                white-space: pre-wrap;
+                line-height: 1.5;
+                color: #555 !important;
+            }
+
+    @@media (min-width: 992px) {
+        .sticky-side {
+            position: sticky;
+            top: 20px; /* Tăng khoảng cách dính */
+        }
+    }
+</style>
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="mb-1">Đơn @Model.MaDon</h2>
+        <div class="order-meta">
+            <div class="chip"><i class="bi bi-calendar3 me-1"></i> @Model.NgayTao.ToString("dd/MM/yyyy HH:mm")</div>
+            <div class="chip">@Html.Raw(StatusBadge(Model.TrangThai))</div>
+            <div class="chip"><strong>Tổng:</strong> @VND(Model.TongTien) đ</div>
+        </div>
+    </div>
+    <div class="order-actions">
+        <a class="btn btn-outline-secondary" href="/admin/orders">
+            <i class="bi bi-arrow-left"></i> Về danh sách
+        </a>
+    </div>
+</div>
+
+@if (TempData["ok"] != null)
+{
+    <div class="alert alert-success"><i class="bi bi-check-circle"></i> @TempData["ok"]</div>
+}
+@if (TempData["err"] != null)
+{
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle"></i> @TempData["err"]</div>
+}
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="vstack gap-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="section-title">Sản phẩm (@Model.Items.Count)</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width:64px; padding-left: 1.25rem;"></th>
+                                    <th>Sản phẩm</th>
+                                    <th class="text-center" style="width:100px">SL</th>
+                                    <th class="text-end" style="width:160px">Đơn giá</th>
+                                    <th class="text-end" style="width:180px; padding-right: 1.25rem;">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var it in Model.Items)
+                                {
+                                    <tr>
+                                        <td style="padding-left: 1.25rem;">
+                                            @if (!string.IsNullOrWhiteSpace(it.HinhAnh))
+                                            {
+                                                <img class="thumb" src="@it.HinhAnh" alt="@it.Ten" />
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="fw-semibold">@it.Ten</div>
+                                        </td>
+                                        <td class="text-center">@it.SoLuong</td>
+                                        <td class="text-end">@VND(it.DonGia) đ</td>
+                                        <td class="text-end" style="padding-right: 1.25rem;">@VND(it.ThanhTien) đ</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot class="table-light">
+                                <tr>
+                                    <th colspan="4" class="text-end">Tổng tiền</th>
+                                    <th class="text-end fs-5" style="padding-right: 1.25rem;">@VND(Model.TongTien) đ</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span class="section-title">Thông tin người nhận</span>
+                    <button class="btn btn-sm btn-outline-secondary"
+                            type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editInfoModal">
+                        <i class="bi bi-pencil"></i> Sửa
+                    </button>
+                </div>
+                <div class="card-body">
+                    <ul class="info-list">
+                        <li>
+                            <i class="bi bi-person info-icon"></i>
+                            <span class="info-text">@Model.HoTen</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-telephone info-icon"></i>
+                            <span class="info-text">@Model.DienThoai</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-geo-alt info-icon"></i>
+                            <span class="info-text">@Model.DiaChi</span>
+                        </li>
+                        @if (!string.IsNullOrWhiteSpace(Model.GhiChu))
+                        {
+                            <li>
+                                <i class="bi bi-chat-left-text info-icon"></i>
+                                <span class="info-text">
+                                    Ghi chú của khách
+                                    <span class="text-muted">@Model.GhiChu</span>
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="sticky-side">
+            <div class="card">
+                <div class="card-header">
+                    <span class="section-title">Cập nhật trạng thái</span>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="/admin/orders/@Model.DonHangId/update-status">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label class="form-label">Trạng thái</label>
+                            <select name="status" class="form-select">
+                                <option value="1" selected="@(Model.TrangThai == 1)">Mới</option>
+                                <option value="2" selected="@(Model.TrangThai == 2)">Đang giao</option>
+                                <option value="3" selected="@(Model.TrangThai == 3)">Hoàn tất</option>
+                                <option value="4" selected="@(Model.TrangThai == 4)">Hủy</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ghi chú nội bộ</label>
+                            <textarea name="note" rows="3" class="form-control" placeholder="Thêm ghi chú cho đơn..."></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-primary btn-lg"><i class="bi bi-save"></i> Lưu cập nhật</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editInfoModal" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 14px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInfoModalLabel">Sửa thông tin người nhận</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="post" action="/admin/orders/@Model.DonHangId/update-info">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Họ tên</label>
+                        <input name="HoTen" class="form-control" maxlength="150" value="@Model.HoTen" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Điện thoại</label>
+                        <input name="DienThoai" class="form-control" maxlength="20" value="@Model.DienThoai" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Địa chỉ</label>
+                        <input name="DiaChi" class="form-control" maxlength="250" value="@Model.DiaChi" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ghi chú (của khách)</label>
+                        <textarea name="GhiChu" rows="3" class="form-control" maxlength="500" placeholder="Ghi chú giao hàng...">@Model.GhiChu</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle"></i> Lưu thông tin</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

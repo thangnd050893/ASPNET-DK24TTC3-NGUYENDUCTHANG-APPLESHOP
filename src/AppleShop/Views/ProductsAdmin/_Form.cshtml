@@ -1,9 +1,12 @@
 ﻿@model AppleShop.Models.SanPham
 @{
-    var isEdit = Model?.SanPhamId > 0;
-    var action = isEdit ? $"/admin/products/edit/{Model.SanPhamId}" : "/admin/products/create";
-    var cats = (IEnumerable<AppleShop.Models.DanhMuc>)ViewBag.Cats ?? Enumerable.Empty<AppleShop.Models.DanhMuc>();
+    var id = Model?.SanPhamId ?? 0; 
+    var isEdit = id > 0;
+    var action = isEdit ? $"/admin/products/edit/{id}" : "/admin/products/create";
+    var cats = ViewBag.Cats as IEnumerable<AppleShop.Models.DanhMuc>
+               ?? Enumerable.Empty<AppleShop.Models.DanhMuc>();
 }
+
 
 <div class="card card-soft">
     <div class="card-body">

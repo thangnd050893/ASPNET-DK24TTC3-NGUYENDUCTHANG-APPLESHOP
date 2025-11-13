@@ -1,221 +1,147 @@
 ﻿@{
     Layout = "_AdminLayout";
-    ViewData["Title"] = "Tổng quan";
+    ViewData["Title"] = "Hướng dẫn Quản trị Hệ thống";
 }
 
 <div class="container-fluid py-4">
-    <div class="mb-4">
-        <div class="d-flex flex-wrap align-items-center gap-3">
-            <!-- Bộ lọc thời gian -->
-            <div class="d-flex gap-2">
-                <select class="form-select form-select-sm" id="timeFilter" style="width: auto;">
-                    <option value="today">Hôm nay</option>
-                    <option value="yesterday">Hôm qua</option>
-                    <option value="week">7 ngày qua</option>
-                    <option value="month" selected>30 ngày qua</option>
-                    <option value="quarter">3 tháng qua</option>
-                    <option value="year">Năm nay</option>
-                    <option value="all">Tất cả</option>
-                </select>
-                <button class="btn btn-sm btn-outline-primary" id="refreshBtn">
-                    <i class="bi bi-arrow-clockwise"></i> Làm mới
-                </button>
-            </div>
+    <h2 class="mb-3">👋 Chào mừng bạn đến với khu vực quản trị AppleShop</h2>
+    <p class="text-muted mb-4">
+        Đây là nơi bạn có thể quản lý toàn bộ hoạt động của website — từ đơn hàng, sản phẩm, đến danh mục và báo cáo.
+        Dưới đây là vài hướng dẫn cơ bản giúp bạn làm quen nhanh hơn.
+    </p>
 
-            <h3 class="mb-0 ms-auto">Xin chào @User.Identity?.Name!</h3>
-        </div>
-    </div>
+    <div class="row g-4">
 
-    <!-- Các thẻ thống kê -->
-    <div class="row g-3 mb-4">
-        <!-- Tổng Đơn Hàng -->
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="flex-shrink-0 me-3">
-                        <div class="rounded-circle bg-primary bg-opacity-10 p-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-cart-check text-primary" viewBox="0 0 16 16">
-                                <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z" />
-                                <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
-                            </svg>
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-transparent border-bottom pb-0">
+                    <h5 class="mb-0">📘 Hướng dẫn sử dụng nhanh</h5>
+                </div>
+                <div class="card-body pt-3">
+
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex align-items-center border-0 px-0">
+                            <i class="bi bi-box-seam fs-4 text-primary me-3"></i>
+                            <div>
+                                <b>Đơn hàng:</b> Xem, duyệt, chỉnh sửa thông tin giao hàng hoặc ghi chú cho từng đơn.
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex align-items-center border-0 px-0">
+                            <i class="bi bi-laptop fs-4 text-success me-3"></i>
+                            <div>
+                                <b>Sản phẩm:</b> Thêm sản phẩm mới, chỉnh sửa giá, mô tả, hoặc tạm ẩn nếu ngưng bán.
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex align-items-center border-0 px-0">
+                            <i class="bi bi-tags fs-4 text-info me-3"></i>
+                            <div>
+                                <b>Danh mục:</b> Gom nhóm sản phẩm theo loại cho dễ tìm (ví dụ: iPhone, Macbook,...).
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex align-items-center border-0 px-0">
+                            <i class="bi bi-pie-chart fs-4 text-warning me-3"></i>
+                            <div>
+                                <b>Báo cáo thống kê:</b> Xem nhanh doanh thu, số lượng đơn, và tình hình bán hàng.
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex align-items-center border-0 px-0">
+                            <i class="bi bi-people fs-4 text-danger me-3"></i>
+                            <div>
+                                <b>Tài khoản quản trị:</b> Mỗi người dùng có thể có tài khoản riêng với quyền hạn cụ thể.
+                            </div>
                         </div>
                     </div>
-                    <div class="flex-grow-1">
-                        <p class="text-muted mb-1 small">Tổng Đơn Hàng</p>
-                        <h4 class="mb-0 fw-bold">4.409</h4>
-                        <small class="text-success">
-                            <i class="bi bi-arrow-up"></i> +12% so với tháng trước
-                        </small>
-                    </div>
+
                 </div>
             </div>
         </div>
 
-        <!-- Tổng Doanh Thu -->
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="flex-shrink-0 me-3">
-                        <div class="rounded-circle bg-success bg-opacity-10 p-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-cash-stack text-success" viewBox="0 0 16 16">
-                                <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
-                                <path d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2z" />
-                            </svg>
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-transparent border-bottom pb-0">
+                    <h5 class="mb-0">💡 Câu hỏi thường gặp</h5>
+                </div>
+                <div class="card-body pt-3">
+
+                    <div class="accordion accordion-flush" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq1">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1Collapse">
+                                    <i class="bi bi-plus-circle me-2"></i>
+                                    Làm sao để thêm sản phẩm mới?
+                                </button>
+                            </h2>
+                            <div id="faq1Collapse" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Vào menu <b>Sản phẩm</b> → Nhấn <b>Thêm mới</b> → Nhập thông tin, giá, hình ảnh → Nhấn <b>Lưu</b>.
+                                    Sau khi lưu, sản phẩm sẽ tự động xuất hiện ở trang khách hàng.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2Collapse">
+                                    <i class="bi bi-key me-2"></i>
+                                    Muốn đổi mật khẩu thì làm sao?
+                                </button>
+                            </h2>
+                            <div id="faq2Collapse" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Vào phần <b>Tài khoản</b> ở góc trên → Chọn <b>Đổi mật khẩu</b> → Nhập mật khẩu mới → Lưu lại.
+                                    Nếu quên mật khẩu, liên hệ quản trị chính để được cấp lại.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3Collapse">
+                                    <i class="bi bi-bug me-2"></i>
+                                    Thêm sản phẩm mà báo lỗi thì xử lý sao?
+                                </button>
+                            </h2>
+                            <div id="faq3Collapse" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Kiểm tra lại các ô bắt buộc như <b>Tên sản phẩm</b>, <b>Giá bán</b> và <b>Danh mục</b> đã nhập chưa.
+                                    Nếu vẫn lỗi, thử tải lại trang hoặc đăng nhập lại để làm mới phiên làm việc.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq4">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4Collapse">
+                                    <i class="bi bi-graph-up me-2"></i>
+                                    Muốn xem doanh thu thì ở đâu?
+                                </button>
+                            </h2>
+                            <div id="faq4Collapse" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Vào mục <b>Báo cáo thống kê</b> → Chọn khoảng thời gian cần xem → Hệ thống sẽ hiển thị doanh thu, số đơn và khách hàng.
+                                    Có thể bấm <b>Xuất Excel</b> để tải về.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq5">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5Collapse">
+                                    <i class="bi bi-palette me-2"></i>
+                                    Tôi muốn chỉnh sửa giao diện trang web thì làm sao?
+                                </button>
+                            </h2>
+                            <div id="faq5Collapse" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Truy cập thư mục <code>Views</code> trong dự án, tìm file .cshtml của trang cần chỉnh (ví dụ: <code>Products/Index.cshtml</code>),
+                                    rồi cập nhật nội dung hoặc style theo ý bạn.
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex-grow-1">
-                        <p class="text-muted mb-1 small">Tổng Doanh Thu</p>
-                        <h4 class="mb-0 fw-bold">793.040.000 ₫</h4>
-                        <small class="text-success">
-                            <i class="bi bi-arrow-up"></i> +8.5% so với tháng trước
-                        </small>
-                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tổng Sản Phẩm -->
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="flex-shrink-0 me-3">
-                        <div class="rounded-circle bg-info bg-opacity-10 p-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-box-seam text-info" viewBox="0 0 16 16">
-                                <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="flex-grow-1">
-                        <p class="text-muted mb-1 small">Sản Phẩm Đang Bán</p>
-                        <h4 class="mb-0 fw-bold">156</h4>
-                        <small class="text-info">
-                            <i class="bi bi-box"></i> 12 sản phẩm mới trong tuần
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Thống kê chi tiết -->
-    <div class="row g-3 mb-4">
-        <!-- Đơn Hàng Chờ Xử Lý -->
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="rounded-circle bg-warning bg-opacity-10 p-3 d-inline-flex mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-clock-history text-warning" viewBox="0 0 16 16">
-                            <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z" />
-                            <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z" />
-                            <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5" />
-                        </svg>
-                    </div>
-                    <h5 class="fw-bold mb-1">24</h5>
-                    <p class="text-muted small mb-0">Đơn Chờ Xử Lý</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Đơn Đang Giao -->
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-flex mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-truck text-primary" viewBox="0 0 16 16">
-                            <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
-                        </svg>
-                    </div>
-                    <h5 class="fw-bold mb-1">87</h5>
-                    <p class="text-muted small mb-0">Đơn Đang Giao</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Đơn Hoàn Thành -->
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="rounded-circle bg-success bg-opacity-10 p-3 d-inline-flex mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-check-circle text-success" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                            <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05" />
-                        </svg>
-                    </div>
-                    <h5 class="fw-bold mb-1">4.298</h5>
-                    <p class="text-muted small mb-0">Đơn Hoàn Thành</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Khách Hàng -->
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="rounded-circle bg-danger bg-opacity-10 p-3 d-inline-flex mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-people text-danger" viewBox="0 0 16 16">
-                            <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
-                        </svg>
-                    </div>
-                    <h5 class="fw-bold mb-1">2.341</h5>
-                    <p class="text-muted small mb-0">Khách Hàng</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Menu quản lý -->
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white border-bottom">
-            <h5 class="mb-0">Quản lý hệ thống</h5>
-        </div>
-        <div class="list-group list-group-flush">
-            <a class="list-group-item list-group-item-action d-flex align-items-center" asp-controller="SanPham" asp-action="Index">
-                <i class="bi bi-box-seam me-3 text-primary"></i>
-                <span>Quản lý Sản phẩm</span>
-                <i class="bi bi-chevron-right ms-auto"></i>
-            </a>
-            <a class="list-group-item list-group-item-action d-flex align-items-center" asp-controller="DonHang" asp-action="Index">
-                <i class="bi bi-cart-check me-3 text-success"></i>
-                <span>Quản lý Đơn hàng</span>
-                <i class="bi bi-chevron-right ms-auto"></i>
-            </a>
-            <a class="list-group-item list-group-item-action d-flex align-items-center" asp-controller="DanhMuc" asp-action="Index">
-                <i class="bi bi-folder me-3 text-info"></i>
-                <span>Quản lý Danh mục</span>
-                <i class="bi bi-chevron-right ms-auto"></i>
-            </a>
-        </div>
     </div>
 </div>
-
-<style>
-    .card {
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-        }
-
-    .list-group-item {
-        transition: background-color 0.2s;
-    }
-
-        .list-group-item:hover {
-            background-color: #f8f9fa;
-        }
-</style>
-
-<script>
-    document.getElementById('timeFilter').addEventListener('change', function() {
-        const period = this.value;
-        // TODO: Gọi API để load lại dữ liệu theo khoảng thời gian
-        console.log('Đã chọn thời gian:', period);
-        // window.location.href = '@Url.Action("Index", "Home")?period=' + period;
-    });
-
-    document.getElementById('refreshBtn').addEventListener('click', function() {
-        location.reload();
-    });
-</script>

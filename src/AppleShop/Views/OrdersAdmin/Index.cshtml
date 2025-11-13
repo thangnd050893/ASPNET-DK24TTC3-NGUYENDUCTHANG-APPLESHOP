@@ -1,93 +1,126 @@
-﻿@model IEnumerable<AppleShop.Models.DonHang>
+﻿@model AppleShop.Controllers.OrdersIndexVM
 @{
-    ViewData["Title"] = "Đơn hàng";
-    string q = (string)(ViewBag.Q ?? "");
-    int? status = (int?)ViewBag.Status;
-    int total = (int)(ViewBag.Total ?? 0);
-    int page = (int)(ViewBag.Page ?? 1);
-    int pageSize = (int)(ViewBag.PageSize ?? 12);
-    int totalPages = (int)Math.Ceiling(total / (double)pageSize);
-
-    string StatusText(int s) => s switch { 0=>"Nháp",1=>"Mới",2=>"Đang giao",3=>"Hoàn tất",4=>"Hủy", _=>"?" };
-
+    ViewData["Title"] = "Danh sách đơn hàng";
+    string fmtMoney(decimal v) => string.Format("{0:#,0}", v);
 }
 
-<div class="card shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Đơn hàng</h5>
-        <div class="d-flex gap-2">
-            <form method="get" class="d-flex gap-2">
-                <input name="q" value="@q" class="form-control" placeholder="Mã đơn / Họ tên / SĐT" />
-                <select name="status" class="form-select">
-                    <option value="">-- Trạng thái --</option>
-                    @for (int i = 0; i <= 4; i++)
-                    {
-                        <option value="@i" selected="@(status == i ? "selected" : null)">@StatusText(i)</option>
-                    }
-                </select>
-                <button class="btn btn-primary">Lọc</button>
-            </form>
-            <a class="btn btn-success" href="/admin/orders/create">+ Tạo đơn</a>
-        </div>
+<h2 class="mb-3">Danh sách đơn hàng</h2>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-3">
+        <input name="q" value="@Model.Q" class="form-control" placeholder="Tìm mã đơn / SĐT / tên">
     </div>
+    <div class="col-md-2">
+        <select name="status" class="form-select">
+            <option value="">-- Trạng thái --</option>
+            <option value="1" selected="@(Model.Status == 1)">Mới</option>
+            <option value="2" selected="@(Model.Status == 2)">Đang giao</option>
+            <option value="3" selected="@(Model.Status == 3)">Hoàn tất</option>
+            <option value="4" selected="@(Model.Status == 4)">Hủy</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <input type="date" name="from" value="@(Model.From?.ToString("yyyy-MM-dd"))" class="form-control">
+    </div>
+    <div class="col-md-2">
+        <input type="date" name="to" value="@(Model.To?.ToString("yyyy-MM-dd"))" class="form-control">
+    </div>
+    <div class="col-md-1">
+        <input type="number" name="pageSize" value="@Model.PageSize" min="5" max="100" class="form-control" title="Số dòng/trang">
+    </div>
+    <div class="col-md-2 d-grid">
+        <button class="btn btn-primary">Lọc</button>
+    </div>
+</form>
 
-    <div class="card-body">
-        @if (TempData["ok"] != null)
-        {
-            <div class="alert alert-success">@TempData["ok"]</div>
-        }
+@functions {
+    // Tạo badge trạng thái (nếu TrangThai là int)
+    string Badge(int st) => st switch
+    {
+        1 => "<span class='badge bg-secondary'>Mới</span>",
+        2 => "<span class='badge bg-info text-dark'>Đang giao</span>",
+        3 => "<span class='badge bg-success'>Hoàn tất</span>",
+        4 => "<span class='badge bg-danger'>Hủy</span>",
+        _ => "<span class='badge bg-light text-dark'>?</span>"
+    };
+}
 
-        <div class="table-responsive">
-            <table class="table table-striped align-middle">
-                <thead class="table-light">
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Mã đơn</th>
+                <th>Ngày tạo</th>
+                <th>Khách hàng</th>
+                <th>SĐT</th>
+                <th>SL</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th style="width:100px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count == 0)
+            {
+                <tr><td colspan="9" class="text-center text-muted">Không có đơn hàng</td></tr>
+            }
+            else
+            {
+                var stt = (Model.Page - 1) * Model.PageSize;
+                foreach (var o in Model.Items)
+                {
+                    stt++;
                     <tr>
-                        <th style="width:80px;">ID</th>
-                        <th>Mã đơn</th>
-                        <th>Khách hàng</th>
-                        <th>SĐT</th>
-                        <th>Trạng thái</th>
-                        <th>Tổng</th>
-                        <th>Ngày tạo</th>
-                        <th class="text-end" style="width:220px;">Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var x in Model)
-                    {
-                        <tr>
-                            <td>@x.DonHangId</td>
-                            <td>@x.MaDon</td>
-                            <td>@x.HoTen</td>
-                            <td>@x.DienThoai</td>
-                            <td>@StatusText(x.TrangThai)</td>
-                            <td>@x.TongTien.ToString("n0")</td> @* tránh ?? với decimal không-nullable *@
-                            <td>@x.NgayTao.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td class="text-end">
-                                <a class="btn btn-sm btn-info" href="/admin/orders/details/@x.DonHangId">Xem</a>
-                                <a class="btn btn-sm btn-warning" href="/admin/orders/edit/@x.DonHangId">Sửa</a>
-                                <form method="post" action="/admin/orders/delete/@x.DonHangId" style="display:inline" onsubmit="return confirm('Xóa đơn này?');">
-                                    @Html.AntiForgeryToken()
-                                    <button class="btn btn-sm btn-danger">Xóa</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                        <td>@stt</td>
+                        <td><strong>@o.MaDon</strong></td>
+                        <td>@o.NgayTao.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@o.HoTen</td>
+                        <td>@o.DienThoai</td>
+                        <td>@o.SoLuong</td>
+                        <td>@fmtMoney(o.TongTien)</td>
+                        <td>@Html.Raw(Badge(o.TrangThai))</td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-primary" href="/admin/orders/@o.DonHangId">Xem</a>
+                        </td>
 
-        @if (totalPages > 1)
-        {
-            <nav class="mt-3">
-                <ul class="pagination">
-                    @for (int i = 1; i <= totalPages; i++)
-                    {
-                        <li class="page-item @(i == page ? "active" : "")">
-                            <a class="page-link" href="?q=@q&status=@status&page=@i">@i</a>
-                        </li>
-                    }
-                </ul>
-            </nav>
-        }
-    </div>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
 </div>
+
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @{
+                int cur = Model.Page;
+                int last = Model.TotalPages;
+                string makeUrl(int p) =>
+                Url.Action("Index", new
+                {
+                    q = Model.Q,
+                    status = Model.Status,
+                    from = Model.From?.ToString("yyyy-MM-dd"),
+                    to = Model.To?.ToString("yyyy-MM-dd"),
+                    page = p,
+                    pageSize = Model.PageSize
+                }) ?? "#";
+            }
+            <li class="page-item @(cur == 1 ? "disabled" : "")">
+                <a class="page-link" href="@makeUrl(cur - 1)">«</a>
+            </li>
+            @for (int p = 1; p <= last; p++)
+            {
+                <li class="page-item @(p == cur ? "active" : "")">
+                    <a class="page-link" href="@makeUrl(p)">@p</a>
+                </li>
+            }
+            <li class="page-item @(cur == last ? "disabled" : "")">
+                <a class="page-link" href="@makeUrl(cur + 1)">»</a>
+            </li>
+        </ul>
+    </nav>
+}
