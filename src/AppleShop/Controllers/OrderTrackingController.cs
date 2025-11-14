@@ -18,6 +18,20 @@ namespace AppleShop.Controllers
         [HttpGet("/tra-cuu-don")]
         public IActionResult Index() => View(new OrderTrackingVM());
 
+        // Hàm đổi mã trạng thái sang chữ
+        private string GetStatusText(int status)
+        {
+            return status switch
+            {
+                0 => "Chờ xác nhận",
+                1 => "Đang chuẩn bị hàng",
+                2 => "Đang giao",
+                3 => "Hoàn thành",
+                4 => "Đã hủy",
+                _ => "Không xác định"
+            };
+        }
+
         // POST /tra-cuu-don — CHỈ CẦN SỐ ĐIỆN THOẠI
         [HttpPost("/tra-cuu-don")]
         [ValidateAntiForgeryToken]
@@ -46,7 +60,8 @@ namespace AppleShop.Controllers
                     o.TongTien,
                     o.NgayTao,
                     o.GhiChu,
-                    o.PhuongThucThanhToan
+                    o.PhuongThucThanhToan,
+                    o.TrangThai          // 👈 NHỚ LẤY CỘT TRẠNG THÁI
                 })
                 .FirstOrDefaultAsync();
 
@@ -56,8 +71,7 @@ namespace AppleShop.Controllers
                 return View(input);
             }
 
-            // LẤY CHI TIẾT ĐƠN: JOIN qua SanPhams để lấy tên sản phẩm
-            // LẤY CHI TIẾT ĐƠN: JOIN qua SanPhams để lấy tên + ảnh
+            // LẤY CHI TIẾT ĐƠN
             List<OrderItemVM> items = await _db.ChiTietDonHangs
                 .AsNoTracking()
                 .Where(c => c.DonHangId == order.DonHangId)
@@ -66,14 +80,14 @@ namespace AppleShop.Controllers
                       s => s.SanPhamId,
                       (c, s) => new OrderItemVM
                       {
-                          TenSanPham = s.Ten,             // hoặc s.TenSanPham nếu DB của bạn dùng tên đó
+                          TenSanPham = s.Ten,
                           SoLuong = c.SoLuong,
                           DonGia = c.DonGia,
-                          HinhAnh = s.HinhAnh             // ← lấy ảnh từ bảng SanPhams
+                          HinhAnh = s.HinhAnh
                       })
                 .ToListAsync();
 
-
+            // Map sang ViewModel
             var vm = new OrderTrackingVM
             {
                 MaDon = order.MaDon,
@@ -83,7 +97,7 @@ namespace AppleShop.Controllers
                 SoDienThoai = order.DienThoai ?? "",
                 Email = "", // bảng DonHangs không có Email
                 DiaChi = order.DiaChi ?? "",
-                TrangThaiText = "Không xác định", // hiện tại không dùng cột TrangThai
+                TrangThaiText = GetStatusText(order.TrangThai),   // 👈 dùng trạng thái thật
                 TongTien = order.TongTien,
                 CreatedAt = order.NgayTao,
                 Items = items

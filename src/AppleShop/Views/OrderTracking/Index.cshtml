@@ -181,7 +181,21 @@
                     <div><b>Khách hàng:</b> @Model.TenKhach</div>
                     <div><b>SĐT:</b> @Model.SoDienThoai</div>
                     <div><b>Ngày đặt:</b> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
+                    
                     <div style="grid-column:1/-1;"><b>Địa chỉ:</b> @Model.DiaChi</div>
+                    <div>
+                        <b>Trạng thái:</b>
+                        <span class="badge text-white
+            @(Model.TrangThaiText == "Mới" ? "bg-secondary" :
+                                        Model.TrangThaiText == "Đang chuẩn bị hàng" ? "bg-primary" :
+                                        Model.TrangThaiText == "Đang giao" ? "bg-info" :
+                                        Model.TrangThaiText == "Hoàn thành" ? "bg-success" :
+                                        Model.TrangThaiText == "Hủy" ? "bg-danger" : "bg-secondary")">
+                        @Model.TrangThaiText
+                    </span>
+                </div>
+
+
                 </div>
 
                 <table class="table">
