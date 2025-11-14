@@ -16,6 +16,7 @@
         border: 1px solid #ececec;
         border-radius: 16px;
         box-shadow: 0 6px 18px rgba(0,0,0,.06);
+        min-height: 460px;
     }
 
     .card-hd {
@@ -143,6 +144,13 @@
         margin-top: 10px;
         font-weight: 700;
     }
+
+    .card-sub {
+        margin: 4px 0 0;
+        font-size: 14px;
+        color: #777;
+        padding: 20px;
+    }
 </style>
 
 <div class="wrap">
@@ -151,6 +159,11 @@
             <div class="card-tt">Tra cứu đơn hàng</div>
             <div class="badge">Nhập số điện thoại</div>
         </div>
+        <p class="card-sub">
+            Kiểm tra nhanh tình trạng đơn hàng của bạn.
+            Nhập số điện thoại đã đặt hàng, hệ thống sẽ hiển thị đơn mới nhất.
+            Cần hỗ trợ gấp gọi <b>1900 9698 42</b>.
+        </p>
 
         <div class="card-bd">
             @if (!ViewData.ModelState.IsValid)
