@@ -27,9 +27,9 @@ Hệ thống bao gồm các chức năng cơ bản của một website thương 
 ------------------------------------------------------------------------
 ## 4. Cấu trúc thư mục
 
-    ├── docker/               chứa file phục vụ triển khai Docker (nếu có)
+    ├── docker/               chứa file phục vụ triển khai Docker 
     ├── progress-report/      chứa báo cáo tiến độ hằng tuần
-    ├── soft/                 chứa phần mềm hỗ trợ trong quá trình làm đồ án (nếu có)
+    ├── soft/                 chứa phần mềm hỗ trợ trong quá trình làm đồ án 
     ├── src/
     │   └── AppleShop/        chứa toàn bộ mã nguồn dự án
     ├── thesis/               chứa tài liệu đồ án
