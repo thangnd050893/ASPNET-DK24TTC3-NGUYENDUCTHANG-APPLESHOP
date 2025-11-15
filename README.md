@@ -42,11 +42,77 @@ Hệ thống bao gồm các chức năng cơ bản của một website thương 
 ------------------------------------------------------------------------
 ## 5. Yêu cầu hệ thống
 -   .NET SDK 8.0
--   SQL Server 2019 hoặc mới hơn
--   Visual Studio 2022
+-   SQL Server Management Studio (SSMS) 20 hoặc mới hơn SQL Server Management Studio (SSMS) 22
+-   Visual Studio 2022 hoặc Visual Studio 2026
 -   Hệ điều hành Windows 10 trở lên
 ------------------------------------------------------------------------
 ## 6. Hướng dẫn cài đặt
 
+### 6.1. Tải source
+1. Download ZIP từ GitHub.
+2. Giải nén.
 
+### 6.2. Cài đặt database
 
+#### Bước 1 — Mở SSMS 20
+- Server type: Database Engine  
+- Server name:
+```
+localhost\SQLEXPRESS
+```
+- Authentication: Windows Authentication  
+- Tick: Trust server certificate  
+→ Connect
+
+#### Bước 2 — Mở file SQL
+File → Open → File → Chọn `AppleShopDb.sql`
+
+#### Bước 3 — Chạy SQL
+- Chọn database AppleShopDb
+- Nhấn Execute (F5)
+- Khi hiện “Commands completed successfully.” là đã tạo database xong.
+
+#### Bước 4 — Kiểm tra bảng
+Mở:
+```
+Databases → AppleShopDb → Tables
+```
+
+### 6.3. Cập nhật Connection String nếu Server name đã thay đổi 
+Mở `appsettings.json` và thay: 
+```json
+"ConnectionStrings": {
+  "AppleShopContext": "Server=localhost\SQLEXPRESS;Database=AppleShopDb;Trusted_Connection=True;TrustServerCertificate=True;"
+}
+```
+
+### 6.4. Chạy dự án
+
+1. **Mở Visual Studio 2022**
+   - Nhấn Start → gõ **Visual Studio 2022** → mở ứng dụng.
+
+2. **Mở solution của dự án**
+   - Chọn:
+     ```
+     File → Open → Project/Solution...
+     ```
+   - Chọn file:
+     ```
+     src/AppleShop/AppleShop.sln
+     ```
+
+3. **Chọn cấu hình chạy**
+   - Ở góc trên Visual Studio, chọn:
+     ```
+     IIS Express
+     ```
+
+4. **Chạy website**
+   - Nhấn **F5** hoặc nhấn nút **Run (IIS Express)**.
+
+5. **Truy cập website**
+   - Visual Studio sẽ tự mở trình duyệt.
+   - Nếu không, bạn có thể truy cập:
+     ```
+     https://localhost:xxxx
+     ```
