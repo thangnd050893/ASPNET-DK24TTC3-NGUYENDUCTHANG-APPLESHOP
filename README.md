@@ -65,7 +65,7 @@ localhost\SQLEXPRESS
 → Connect
 
 #### Bước 2 — Mở file SQL
-File → Open → File → Chọn `AppleShopDb.sql`
+File → Open → File → Chọn `AppleShopDbnew.sql`
 
 #### Bước 3 — Chạy SQL
 - Chọn database AppleShopDb
