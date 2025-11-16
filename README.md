@@ -117,8 +117,9 @@ Mở `appsettings.json` và thay:
      https://localhost:xxxx
      ```
 6. **Tài Khoản Admin **
-   - https://localhost:xxxx/admin
- ```
-user: admin
-mật khẩu : admin@123
-     ```
+- https://localhost:xxxx/admin
+- tài khoản: admin
+- mật khẩu : admin@123
+### 7. Link Demo trên Hosting
+```https://thangnd.com
+```
