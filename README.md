@@ -116,7 +116,9 @@ Mở `appsettings.json` và thay:
      ```
      https://localhost:xxxx
      ```
-     ```
+6. **Tài Khoản Admin **
+   - https://localhost:xxxx/admin
+ ```
 user: admin
-Password: admin@123
-```
+mật khẩu : admin@123
+     ```
