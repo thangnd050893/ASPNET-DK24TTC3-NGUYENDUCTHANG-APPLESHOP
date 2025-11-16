@@ -121,7 +121,7 @@ Mở `appsettings.json` và thay:
 - tài khoản: admin
 - mật khẩu : admin@123
 ### 7. Link Demo trên Hosting
-<a href="https://thangnd.com" target="_blank">thangnd.com</a>
-
+```<a href="https://thangnd.com" target="_blank">thangnd.com</a>```
+```https://drive.google.com/file/d/1bHb1Qn4IcG_9WieIO1U3jdnqaM3Mh5tb/view```
 
 
