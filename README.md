@@ -116,3 +116,7 @@ Mở `appsettings.json` và thay:
      ```
      https://localhost:xxxx
      ```
+     ```
+user: admin
+Password: admin@123
+```
