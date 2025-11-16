@@ -120,8 +120,10 @@ Mở `appsettings.json` và thay:
 - https://localhost:xxxx/admin
 - tài khoản: admin
 - mật khẩu : admin@123
+- Video hướng dẫn kết nối 
+```https://drive.google.com/file/d/1bHb1Qn4IcG_9WieIO1U3jdnqaM3Mh5tb/view```
 ### 7. Link Demo trên Hosting
 <a href="https://thangnd.com" target="_blank">thangnd.com</a>
-```https://drive.google.com/file/d/1bHb1Qn4IcG_9WieIO1U3jdnqaM3Mh5tb/view```
+
 
 
