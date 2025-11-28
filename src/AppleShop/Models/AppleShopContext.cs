@@ -13,12 +13,12 @@ namespace AppleShop.Models
         public DbSet<ChiTietDonHang> ChiTietDonHangs { get; set; } = null!;
         public DbSet<NguoiDungQuanTri> NguoiDungQuanTris { get; set; } = null!;
 
-        // =============== MAPPING ===============
+    
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // ---- DanhMuc (bảng thật: DanhMuc) ----
+       
             modelBuilder.Entity<DanhMuc>(entity =>
             {
                 entity.ToTable("DanhMuc");
@@ -28,34 +28,32 @@ namespace AppleShop.Models
                       .HasMaxLength(100)
                       .IsRequired();
 
-                // Quan hệ danh mục cha - con (self reference)
+           
                 entity.HasOne(e => e.DanhMucCha)
                       .WithMany(e => e.DanhMucCon)
                       .HasForeignKey(e => e.DanhMucChaId)
-                      .OnDelete(DeleteBehavior.Restrict); // tránh xoá dây chuyền
+                      .OnDelete(DeleteBehavior.Restrict); 
             });
 
-            // ---- SanPham (bảng thật: SanPham) ----
+     
             modelBuilder.Entity<SanPham>(entity =>
             {
                 entity.ToTable("SanPham");
                 entity.HasKey(e => e.SanPhamId);
 
-                // FK: SanPham.DanhMucId -> DanhMuc.DanhMucId
                 entity.HasOne(e => e.DanhMuc)
                       .WithMany(d => d.SanPhams)
                       .HasForeignKey(e => e.DanhMucId)
-                      .OnDelete(DeleteBehavior.Restrict); // không cho xoá DM khi còn SP
+                      .OnDelete(DeleteBehavior.Restrict); 
             });
 
-            // ---- DonHang (bảng thật: DonHangs) ----
+      
             modelBuilder.Entity<DonHang>(entity =>
             {
                 entity.ToTable("DonHangs");
                 entity.HasKey(e => e.DonHangId);
 
-                // Nếu bạn có cột CreatedAt kiểu datetime trong DB
-                // entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATETIME()");
+              
             });
 
             // ---- ChiTietDonHang (bảng thật: ChiTietDonHangs) ----
@@ -64,13 +62,13 @@ namespace AppleShop.Models
                 entity.ToTable("ChiTietDonHangs");
                 entity.HasKey(e => e.ChiTietDonHangId);
 
-                // FK: CT -> DonHang (xoá đơn sẽ xoá chi tiết)
+        
                 entity.HasOne(ct => ct.DonHang)
                       .WithMany(o => o.ChiTietDonHangs)
                       .HasForeignKey(ct => ct.DonHangId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                // FK: CT -> SanPham (tuỳ DB; dùng Restrict để an toàn)
+      
                 entity.HasOne(ct => ct.SanPham)
                       .WithMany()
                       .HasForeignKey(ct => ct.SanPhamId)

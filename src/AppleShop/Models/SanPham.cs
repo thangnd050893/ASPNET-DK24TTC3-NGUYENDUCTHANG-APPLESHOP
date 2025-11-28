@@ -9,7 +9,7 @@ namespace AppleShop.Models
         public string? MoTa { get; set; }       // cột: MoTa
         public decimal GiaBan { get; set; }     // cột: GiaBan
         public string? HinhAnh { get; set; }    // cột: HinhAnh (ví dụ: /imgs/iphone/iphone17.png)
-        public int DanhMucId { get; set; }      // cột: DanhMucId (iPhone = 1 theo ảnh bạn gửi)
+        public int DanhMucId { get; set; }      // cột: DanhMucId 
         public DanhMuc? DanhMuc { get; set; }
         public bool NoiBat { get; set; }        // cột: NoiBat
         public DateTime NgayTao { get; set; }   // cột: NgayTao

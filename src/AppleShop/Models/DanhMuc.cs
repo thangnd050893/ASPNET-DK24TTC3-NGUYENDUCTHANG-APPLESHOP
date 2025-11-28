@@ -13,16 +13,14 @@ namespace AppleShop.Models
         [Required, StringLength(100)]
         public string Ten { get; set; } = "";
 
-        // FK tự tham chiếu (có trong DB của bạn)
+   
         public int? DanhMucChaId { get; set; }
-
-        // ---- Navigation properties cần cho OnModelCreating ----
         [ForeignKey(nameof(DanhMucChaId))]
-        public DanhMuc? DanhMucCha { get; set; }           // danh mục cha
+        public DanhMuc? DanhMucCha { get; set; }         
 
-        public ICollection<DanhMuc> DanhMucCon { get; set; } = new List<DanhMuc>(); // các danh mục con
+        public ICollection<DanhMuc> DanhMucCon { get; set; } = new List<DanhMuc>(); 
 
-        // nếu SanPham có FK DanhMucId
+  
         public ICollection<SanPham>? SanPhams { get; set; }
     }
 }
