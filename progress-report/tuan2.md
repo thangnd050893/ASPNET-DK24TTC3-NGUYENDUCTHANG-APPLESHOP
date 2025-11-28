@@ -1,8 +1,6 @@
-# Tiến độ tuần 2 (3/11 – 09/11)
-## 1. Công việc đã làm
-Tạo project ASP.NET Core MVC tên AppleShop.
-Chạy thử được trang Welcome trên localhost.
-Kết nối Visual Studio với GitHub thành công.
-Sắp xếp lại cấu trúc thư mục: src, thesis, progress-report, soft, docker.
-Thêm file README.md để đẩy được các thư mục rỗng lên GitHub.
-
+# Tiến độ tuần 2 (02/11 – 09/11)
+## 1. Việc đã hoàn thành
+- Hoàn thiện mô hình dữ liệu
+- Xây dựng chức năng quản lý sản phẩm
+- Xây dựng chức năng đăng nhập quản trị
+- Thực hiện báo cáo tuần
