@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations; // cho DTO validate
+using System.ComponentModel.DataAnnotations; 
 using AppleShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-// using Microsoft.AspNetCore.Authorization;
+
 
 namespace AppleShop.Controllers
 {
@@ -42,7 +42,7 @@ namespace AppleShop.Controllers
                     x.HoTen.Contains(q));
             }
 
-            // trạng thái (DB hiện là int)
+     
             if (status.HasValue)
                 query = query.Where(x => x.TrangThai == status.Value);
 
@@ -85,7 +85,7 @@ namespace AppleShop.Controllers
             return View(vm);
         }
 
-        // ===================== DETAIL =====================
+  
         // GET /admin/orders/{id}
         [HttpGet("/admin/orders/{id:int}")]
         public async Task<IActionResult> Detail(int id)
@@ -124,7 +124,7 @@ namespace AppleShop.Controllers
             return View(order);
         }
 
-        // ============== UPDATE STATUS ==============
+   
         // POST /admin/orders/{id}/update-status
         [HttpPost("/admin/orders/{id:int}/update-status")]
         [ValidateAntiForgeryToken]
@@ -142,7 +142,7 @@ namespace AppleShop.Controllers
             return RedirectToAction(nameof(Detail), new { id });
         }
 
-        // ============== UPDATE INFO (name/phone/address/note) ==============
+       
         public class OrderInfoInput
         {
             [Required, MaxLength(150)]
@@ -207,7 +207,7 @@ namespace AppleShop.Controllers
         public string? DienThoai { get; set; }
         public string? DiaChi { get; set; }
         public decimal TongTien { get; set; }
-        public int TrangThai { get; set; }   // Nếu DB đổi sang string -> đổi type
+        public int TrangThai { get; set; }   
         public int SoLuong { get; set; }
     }
 
@@ -220,7 +220,7 @@ namespace AppleShop.Controllers
         public string? DienThoai { get; set; }
         public string? DiaChi { get; set; }
         public string? GhiChu { get; set; }
-        public int TrangThai { get; set; }   // Nếu DB là string -> đổi sang string
+        public int TrangThai { get; set; }  
         public decimal TongTien { get; set; }
 
         public List<ItemVM> Items { get; set; } = new();

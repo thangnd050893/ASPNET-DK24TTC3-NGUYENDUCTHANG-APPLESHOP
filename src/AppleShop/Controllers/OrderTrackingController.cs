@@ -14,11 +14,11 @@ namespace AppleShop.Controllers
         private readonly AppleShopContext _db;
         public OrderTrackingController(AppleShopContext db) => _db = db;
 
-        // GET /tra-cuu-don
+
         [HttpGet("/tra-cuu-don")]
         public IActionResult Index() => View(new OrderTrackingVM());
 
-        // Hàm đổi mã trạng thái sang chữ
+
         private string GetStatusText(int status)
         {
             return status switch
@@ -61,7 +61,7 @@ namespace AppleShop.Controllers
                     o.NgayTao,
                     o.GhiChu,
                     o.PhuongThucThanhToan,
-                    o.TrangThai          // 👈 NHỚ LẤY CỘT TRẠNG THÁI
+                    o.TrangThai        
                 })
                 .FirstOrDefaultAsync();
 
@@ -87,7 +87,7 @@ namespace AppleShop.Controllers
                       })
                 .ToListAsync();
 
-            // Map sang ViewModel
+    
             var vm = new OrderTrackingVM
             {
                 MaDon = order.MaDon,
@@ -95,9 +95,9 @@ namespace AppleShop.Controllers
                 DonHangId = order.DonHangId,
                 TenKhach = order.HoTen ?? "",
                 SoDienThoai = order.DienThoai ?? "",
-                Email = "", // bảng DonHangs không có Email
+                Email = "", 
                 DiaChi = order.DiaChi ?? "",
-                TrangThaiText = GetStatusText(order.TrangThai),   // 👈 dùng trạng thái thật
+                TrangThaiText = GetStatusText(order.TrangThai),   
                 TongTien = order.TongTien,
                 CreatedAt = order.NgayTao,
                 Items = items

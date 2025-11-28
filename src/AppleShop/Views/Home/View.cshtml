@@ -1,0 +1,30 @@
+﻿@model List<AppleShop.Models.ViewModels.ProductCardVM>
+
+@{
+    ViewData["Title"] = "Kết quả tìm kiếm";
+}
+
+<h3>Kết quả cho: "@ViewBag.Keyword"</h3>
+
+@if (Model.Count == 0)
+{
+    <p>Không tìm thấy sản phẩm nào.</p>
+}
+else
+{
+    <div class="row mt-4">
+        @foreach (var p in Model)
+        {
+            <div class="col-md-3 mb-3">
+                <div class="card">
+                    <img src="@p.HinhAnh" class="card-img-top" style="height:220px;object-fit:cover;" />
+                    <div class="card-body">
+                        <h6>@p.Ten</h6>
+                        <p class="text-danger fw-bold">@p.GiaBan.ToString("N0")₫</p>
+                        <a href="/Product/Detail/@p.Id" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

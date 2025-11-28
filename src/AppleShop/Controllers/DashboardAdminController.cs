@@ -59,12 +59,12 @@ namespace AppleShop.Controllers
                 itemsQuery = itemsQuery.Where(i => i.DonHang!.NgayTao >= fromDate);
 
             vm.TopByQty = await itemsQuery
-                .GroupBy(i => new { i.SanPhamId, i.SanPham!.Ten, i.SanPham!.HinhAnh }) // ✅ Đã fix: Thêm '!'
+                .GroupBy(i => new { i.SanPhamId, i.SanPham!.Ten, i.SanPham!.HinhAnh }) 
                 .Select(g => new TopQtyVM
                 {
                     SanPhamId = g.Key.SanPhamId,
                     Ten = g.Key.Ten ?? "(Sản phẩm)",
-                    HinhAnh = g.Key.HinhAnh, // Cân nhắc xử lý null ở đây nếu HinhAnh có thể null
+                    HinhAnh = g.Key.HinhAnh,
                     SoLuongBan = g.Sum(x => x.SoLuong),
 
                 
@@ -75,14 +75,14 @@ namespace AppleShop.Controllers
                 .Take(10)
                 .ToListAsync();
 
-            // =======================================================================
+         
 
             ViewData["Title"] = "Tổng quan";
             return View(vm);
         }
     }
 
-    // ====================== VIEWMODEL ======================
+
     public class DashboardVM
     {
         public string Period { get; set; } = "month";

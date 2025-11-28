@@ -7,6 +7,29 @@ public class HomeController : Controller
 {
     private readonly AppleShopContext _db;
     public HomeController(AppleShopContext db) => _db = db;
+    public async Task<IActionResult> Search(string keyword)
+    {
+        if (string.IsNullOrWhiteSpace(keyword))
+        {
+            return View(new List<ProductCardVM>());
+        }
+
+        var products = await _db.SanPhams
+            .Where(p => p.Ten.Contains(keyword))
+            .OrderByDescending(p => p.NgayTao)
+            .Select(p => new ProductCardVM
+            {
+                Id = p.SanPhamId,
+                Ten = p.Ten,
+                GiaBan = p.GiaBan,
+                HinhAnh = p.HinhAnh
+            })
+            .ToListAsync();
+
+        ViewBag.Keyword = keyword;
+
+        return View(products);
+    }
 
     public async Task<IActionResult> Index()
     {
@@ -22,7 +45,7 @@ public class HomeController : Controller
         int? macbookId = categories.FirstOrDefault(x => x.Ten.Equals("Macbook", StringComparison.OrdinalIgnoreCase) || x.Ten.Equals("Mac", StringComparison.OrdinalIgnoreCase))?.DanhMucId;
         int? ipadId = categories.FirstOrDefault(x => x.Ten.Equals("iPad", StringComparison.OrdinalIgnoreCase))?.DanhMucId;
 
-        // Hàm tiện ích để lấy sản phẩm theo danh mục
+       
         async Task<List<ProductCardVM>> GetProducts(int? cateId)
         {
             if (cateId == null) return new List<ProductCardVM>();

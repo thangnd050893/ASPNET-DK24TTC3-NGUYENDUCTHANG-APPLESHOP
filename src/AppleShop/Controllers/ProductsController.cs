@@ -12,9 +12,9 @@ namespace AppleShop.Controllers
         private readonly AppleShopContext _db;
         public ProductsController(AppleShopContext db) => _db = db;
 
-        // ======================================================
+    
         // 1) TRANG CHI TIẾT SẢN PHẨM: /products/detail/{id}
-        // ======================================================
+    
         [HttpGet("/products/detail/{id:int}")]
         public async Task<IActionResult> Detail(int id)
         {
@@ -62,9 +62,9 @@ namespace AppleShop.Controllers
             return View(sp);
         }
 
-        // ======================================================================
+ 
         // 2) TRANG DANH MỤC: /products/category/{id}?sort=new|price-asc|price-desc&page=1&pageSize=12
-        // ======================================================================
+      
         [HttpGet("/products/category/{id:int}")]
         public async Task<IActionResult> Category(int id, string sort = "new", int page = 1, int pageSize = 12)
         {
@@ -77,12 +77,12 @@ namespace AppleShop.Controllers
 
             if (danhMuc == null) return NotFound();
 
-            // Base query
+     
             var q = _db.SanPhams
                 .AsNoTracking()
                 .Where(p => p.DanhMucId == id);
 
-            // Sort
+     
             sort = (sort ?? "new").ToLower();
             q = sort switch
             {
@@ -91,7 +91,7 @@ namespace AppleShop.Controllers
                 _ => q.OrderByDescending(p => p.NgayTao)
             };
 
-            // Pagination
+       
             var total = await q.CountAsync();
             page = System.Math.Max(1, page);
             pageSize = System.Math.Clamp(pageSize, 6, 48);
@@ -115,7 +115,7 @@ namespace AppleShop.Controllers
                 SanPhams = items
             };
 
-            // Truyền thêm dữ liệu phân trang qua ViewData hoặc ViewBag
+        
             ViewData["Sort"] = sort;
             ViewData["Page"] = page;
             ViewData["PageSize"] = pageSize;

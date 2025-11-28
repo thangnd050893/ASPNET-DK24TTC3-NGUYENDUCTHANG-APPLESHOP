@@ -1,6 +1,6 @@
 ﻿using AppleShop.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies; // thêm dòng này
+using Microsoft.AspNetCore.Authentication.Cookies; 
 
 var builder = WebApplication.CreateBuilder(args);
 

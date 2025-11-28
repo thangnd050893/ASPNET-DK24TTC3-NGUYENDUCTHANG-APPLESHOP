@@ -113,7 +113,7 @@ namespace AppleShop.Controllers
         }
 
         // GET /checkout/success/{id}
-        // Truy theo DonHangId (int) để khớp DB -> không còn InvalidCastException
+   
         [HttpGet("/checkout/success/{id:int}")]
         public async Task<IActionResult> Success(int id)
         {
